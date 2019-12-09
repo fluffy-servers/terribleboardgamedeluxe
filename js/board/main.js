@@ -20,6 +20,17 @@ function init() {
     document.body.appendChild(renderer.domElement)
 }
 
+function resize() {
+    var aspect = window.innerWidth / window.innerHeight
+    camera.left = -zoomd * aspect
+    camera.right = zoomd * aspect
+    camera.top = zoomd
+    camera.bottom = -zoomd
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+}
+window.addEventListener('resize', resize, false)
+
 // Generate the board tiles
 function generate_board() {
     // Add the ground
