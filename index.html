@@ -1,6 +1,8 @@
 <html>
     <head>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.js'></script>
+        <script src='js/board/texture.js'></script>
+        <script src='js/board/tile.js'></script>
         <style>
             body { margin: 0; }
             canvas { width: 100%; height: 100% }
@@ -9,110 +11,5 @@
     <body>
     
     </body>
-    <script>
-        var scene, camera, renderer
-        var zoomd = 5
-        
-        function init() {
-            scene = new THREE.Scene()
-            
-            var aspect = window.innerWidth / window.innerHeight
-            camera = new THREE.OrthographicCamera(-zoomd * aspect, zoomd * aspect, zoomd, -zoomd, 1, 1000)
-            camera.position.set(zoomd, zoomd, zoomd)
-            camera.lookAt(scene.position)
-            
-            renderer = new THREE.WebGLRenderer()
-            renderer.shadowMap.enabled = true
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap
-            renderer.setSize(window.innerWidth, window.innerHeight)
-            document.body.appendChild(renderer.domElement)
-        }
-        
-        function loadTexture() {
-            var texture
-            if(Math.random() > 0.5) {
-                texture = new THREE.TextureLoader().load("assets/board/tile/star.png")
-            } else if (Math.random() > 0.5){
-                texture = new THREE.TextureLoader().load("assets/board/tile/go.png")
-            } else {
-                texture = new THREE.TextureLoader().load("assets/board/tile/shop.png")
-            }
-            return texture
-        }
-        
-        function foxTexture() {
-            var n = 1 + Math.floor(Math.random() * Math.floor(6))
-            var texture = new THREE.TextureLoader().load("assets/board/sprite/fox_hr" + n + ".png")
-            return texture
-        }
-        
-        function createTile() {
-            var geom = new THREE.CubeGeometry(1, 0.2, 1)
-            var base_mat = new THREE.MeshLambertMaterial({color: "#d1d8e0"})
-            var top_mat = new THREE.MeshLambertMaterial({map:loadTexture()})
-            var tile = new THREE.Mesh(geom, [base_mat, base_mat, top_mat, base_mat, base_mat, base_mat])
-            scene.add(tile)
-            tile.position.y = 0.1
-            
-            tile.castShadow = true
-            tile.receiveShadow = true
-            
-            return tile
-        }
-        
-        function geometry() {
-            var geom = new THREE.PlaneGeometry(50, 50)
-            var material = new THREE.MeshLambertMaterial({color: "#20bf6b"})
-            var plane = new THREE.Mesh(geom, material)
-            plane.rotation.x = -Math.PI/2
-            scene.add(plane)
-            
-            plane.receiveShadow = true
-        }
-        
-        function lighting() {
-            var sun = new THREE.DirectionalLight(0xffffff, 1)
-            sun.position.set(-0.9, 1, 0.5)
-            //sun.position.multiplyScalar(1)
-            scene.add(sun)
-            
-            sun.castShadow = true
-            sun.shadow.mapSize.width = 512
-            sun.shadow.mapSize.height = 512
-            sun.shadow.camera.top = zoomd
-            sun.shadow.camera.bottom = zoomd
-            sun.shadow.camera.left = zoomd
-            sun.shadow.camera.right = zoomd
-            
-            var hemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.4)
-            scene.add(hemisphere)
-        }
-        
-        function animate() {
-            requestAnimationFrame(animate)
-            renderer.render(scene, camera)
-        }
-        init()
-        geometry()
-        
-        for(var i=-5; i<5; i++) {
-            for(var j=-5; j<5; j++) {
-                var t = createTile()
-                t.position.z = i * 1.25
-                t.position.x = j * 1.25
-                
-                if(Math.random() > 0.5) {
-                var spriteMaterial = new THREE.SpriteMaterial({map: foxTexture(), color: 0xffffff})
-                var sprite = new THREE.Sprite(spriteMaterial)
-                scene.add(sprite)
-                sprite.position.z = (i * 1.25) - 0.125
-                sprite.position.x = (j * 1.25) - 0.125
-                sprite.position.y = 0.6
-                }
-            }
-        }
-        
-        lighting()
-        animate()
-    </script>
+    <script src='js/board/main.js'></script>
 </html>
