@@ -1,6 +1,7 @@
 var express = require('express');
 var http = require('http');
-var socket = require('socket.io')
+var socket = require('socket.io');
+var sanitize = require('sanitize-html');
 var port = process.env.PORT || 3000;
 
 var app = express();
@@ -65,6 +66,7 @@ function removePlayer(roomcode, playerid, update=true) {
 io.on('connection', (socket) => {
     socket.on('join game', function(roomcode, username) {
         roomcode = roomcode.toUpperCase()
+        username = sanitize(username).trim()
         
         // Ignore logins from people already in rooms
         if(socket.gameRoom) {
@@ -81,8 +83,16 @@ io.on('connection', (socket) => {
         }
         var room = rooms[roomcode]
         
+        // Don't let people join games that are in progress
+        // Might change this later
         if(room.gamestate != 'lobby') {
             socket.emit('login error', 'Room is already in game')
+            return
+        }
+        
+        // Verify that the username is valid
+        if(username.length > 20 || username.length < 1) {
+            socket.emit('login error', 'Username is too long')
             return
         }
         
@@ -120,7 +130,7 @@ io.on('connection', (socket) => {
         if(!socket.gameRoom) return;
         var roomcode = socket.gameRoom
         var username = rooms[roomcode].players[socket.playerID].username
-        text = text.trim()
+        text = sanitize(text).trim()
         
         // Check some basic anti spam stuff
         if(socket.lastChat && (Date.now() - socket.lastChat) < 500) return;
