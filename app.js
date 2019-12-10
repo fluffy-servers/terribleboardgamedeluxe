@@ -116,6 +116,14 @@ io.on('connection', (socket) => {
         io.to(roomcode).emit('update players', encodeRoomPlayers(room.players))
     })
     
+    socket.on('chat message', function(text) {
+        if(!socket.gameRoom) return;
+        var roomcode = socket.gameRoom
+        var username = rooms[roomcode].players[socket.playerID].username
+        
+        io.to(roomcode).emit('chat message', username, text)
+    })
+    
     socket.on('disconnect', function() {
         if(socket.gameRoom) {
             removePlayer(socket.gameRoom, socket.playerID)
