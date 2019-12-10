@@ -120,7 +120,13 @@ io.on('connection', (socket) => {
         if(!socket.gameRoom) return;
         var roomcode = socket.gameRoom
         var username = rooms[roomcode].players[socket.playerID].username
+        text = text.trim()
         
+        // Check some basic anti spam stuff
+        if(socket.lastChat && (Date.now() - socket.lastChat) < 500) return;
+        if(text.length < 1) return;
+        
+        socket.lastChat = Date.now()
         io.to(roomcode).emit('chat message', username, text)
     })
     
