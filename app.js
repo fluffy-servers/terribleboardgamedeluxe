@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
         
         // Verify that the username is valid
         if(username.length > 20 || username.length < 1) {
-            socket.emit('login error', 'Username is too long')
+            socket.emit('login error', 'Username is invalid')
             return
         }
         
