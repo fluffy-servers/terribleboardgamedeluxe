@@ -1,0 +1,103 @@
+<html>
+    <head>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.js'></script>
+        <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+        
+        <script src='js/board/texture.js'></script>
+        <script src='js/board/tile.js'></script>
+        <script src='js/board/main.js'></script>
+        
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-pink.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Oswald&display=swap" rel="stylesheet">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        
+        <link rel="stylesheet" href="style/main.css">
+        <link rel="stylesheet" href="style/login.css">
+    </head>
+    <body>
+        <div id='login'>
+            <div class='loginbox'>
+                <h1> Login </h1>
+                <p id='loginmessage'>Enter a room code and choose a username!</p>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="roomcode" maxlength="4" autocomplete="off">
+                    <label class="mdl-textfield__label" for="roomcode">Room Code</label>
+                </div>
+                
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="username" maxlength="20" autocomplete="off">
+                    <label class="mdl-textfield__label" for="username">Username</label>
+                </div>
+                <button id='joinbutton' class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick='attemptLogin()'>
+                    Join Game
+                </button>
+            </div>
+        </div>
+        
+        <div id='lobby' class='hidden'>
+            <div class='lobbybox'>
+                <h1> Lobby </h1>
+                <h2> Room: <b id='lobby-roomcode'>AAAA</b></h2>
+                
+                <ul id='lobby-players-list'>
+                </ul>
+            </div>
+        </div>
+        
+        <canvas id='boardcanvas'></canvas>
+    </body>
+    <script>
+        var socket = io();
+        var gamestate = {}
+        
+        function attemptLogin() {
+            var roomcode = document.getElementById('roomcode').value;
+            var username = document.getElementById('username').value;
+            socket.emit('join game', roomcode, username);
+        }
+        
+        function lobbyPlayersList(players) {
+            var list = document.getElementById('lobby-players-list')
+            list.innerHTML = ''
+            
+            // Create a row in the list for each player
+            for(var id in players) {
+                var player = players[id]
+                if(!player) continue;
+                
+                var item = document.createElement('li')
+                var avatar = document.createElement('img')
+                avatar.src = 'assets/board/sprite/fox_hr' + id + '.png'
+                
+                var text = document.createElement('span')
+                text.innerHTML = player.username
+                
+                item.appendChild(avatar)
+                item.appendChild(text)
+                list.appendChild(item)
+            }
+        }
+        
+        socket.on('login error', function(text) {
+            var msg = document.getElementById('loginmessage')
+            msg.innerHTML = text
+            msg.classList.add('loginerror')
+        });
+        
+        socket.on('joined lobby', function(roomcode) {
+            console.log('Connected to room:', roomcode)
+            gamestate.roomcode = roomcode
+            gamestate.state = 'lobby'
+            document.getElementById('login').classList.add('hidden')
+            document.getElementById('lobby').classList.remove('hidden')
+            document.getElementById('lobby-roomcode').innerHTML = roomcode
+        });
+        
+        socket.on('update players', function(players) {
+            if(gamestate.state == 'lobby') {
+                lobbyPlayersList(players)
+            }
+        });
+    </script>
+</html>

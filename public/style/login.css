@@ -1,0 +1,89 @@
+#login {
+    position: absolute;
+    width: 100%; 
+    height: 100%;
+    
+    background: url('../assets/background.png');
+    animation: 30s background-scroll infinite linear;
+}
+
+@keyframes background-scroll {
+    100% { background-position: 0px -512px }
+}
+
+.loginbox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    background-color: #ecf0f1;
+    border: 4px solid #2196f3;
+    border-radius: 64px;
+    
+    width: 400px;
+    height: 280px;
+    padding: 32px;
+}
+
+#joinbutton {
+    float: right;
+    margin-right: 8px;
+    margin-top: 20px;
+}
+
+.loginerror {
+    color: red;
+    font-weight: bold;
+    height: 16px;
+}
+
+.mdl-textfield {
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+#lobby {
+    position: absolute;
+    width: 100%; 
+    height: 100%;
+    
+    background: url('../assets/background.png');
+    animation: 30s background-scroll infinite linear;
+}
+
+.lobbybox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    background-color: #ecf0f1;
+    border: 4px solid #2196f3;
+    border-radius: 64px;
+    
+    width: 400px;
+    height: 600px;
+    padding: 32px;
+}
+
+#lobby-players-list {
+    list-style-type: none;
+}
+
+#lobby-players-list li {
+    margin: 12px 0;
+}
+
+#lobby-players-list img {
+    width: 48px;
+    height: 48px;
+    background: #2196f3;
+    border-radius: 64px;
+}
+
+#lobby-players-list span {
+    font-size: 1.5em;
+    font-weight: normal;
+    padding-left: 8px;
+}

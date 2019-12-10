@@ -13,14 +13,21 @@ function init() {
     camera.lookAt(scene.position)
     
     // Create the renderer
-    renderer = new THREE.WebGLRenderer()
+    renderer = new THREE.WebGLRenderer({canvas: document.getElementById('boardcanvas')})
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement)
+    
+    // Start the rest of the board functions
+    lighting()
+    generate_board()
+    animate()
 }
 
 function resize() {
+    if(!scene) return;
+    
     var aspect = window.innerWidth / window.innerHeight
     camera.left = -zoomd * aspect
     camera.right = zoomd * aspect
@@ -86,9 +93,3 @@ function animate() {
     requestAnimationFrame(animate)
     renderer.render(scene, camera)
 }
-
-// Start the board
-init()
-lighting()
-generate_board()
-animate()
