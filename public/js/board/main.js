@@ -21,7 +21,6 @@ function init() {
     
     // Start the rest of the board functions
     lighting()
-    generate_board()
     animate()
 }
 
@@ -38,8 +37,29 @@ function resize() {
 }
 window.addEventListener('resize', resize, false)
 
+function createTile(texture) {
+    var geom = new THREE.CubeGeometry(1, 0.2, 1)
+    var base_mat = new THREE.MeshLambertMaterial({color: "#d1d8e0"})
+    var top_mat = new THREE.MeshLambertMaterial({map: texture})
+    
+    var tile = new THREE.Mesh(geom, [base_mat, base_mat, top_mat, base_mat, base_mat, base_mat])
+    scene.add(tile)
+    tile.position.y = 0.1
+    
+    tile.castShadow = true
+    tile.receiveShadow = true
+    
+    return tile
+}
+
+function translateCoordinate(x, y) {
+    var x = x * 1.25
+    var y = y * 1.25
+    return [x, y]
+}
+
 // Generate the board tiles
-function generate_board() {
+function generate_board(boardData) {
     // Add the ground
     var geom = new THREE.PlaneGeometry(50, 50)
     var material = new THREE.MeshLambertMaterial({color: "#20bf6b"})
@@ -49,12 +69,15 @@ function generate_board() {
     scene.add(plane)
     
     // Generate the tiles
-    for(var i=-5; i<5; i++) {
-        for(var j=-5; j<5; j++) {
-            var t = createTile(textures.tile_go)
-            t.position.z = i * 1.25
-            t.position.x = j * 1.25
-        }
+    for(var id in boardData) {
+        var tile = boardData[id]
+        var texture = textures['tile_' + tile.type] 
+        
+        var [xx, yy] = translateCoordinate(tile.x, tile.y)
+        
+        var t = createTile(texture)
+        t.position.x = xx
+        t.position.z = yy
     }
     
     // Add a fox

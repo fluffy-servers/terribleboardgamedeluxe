@@ -8,6 +8,7 @@ var app = express();
 var server = http.createServer(app);
 var io = socket(server);
 
+var Board = require('./board/board.js')
 
 server.listen(port, function() {
    console.log('Server started on *:3000'); 
@@ -61,6 +62,15 @@ function removePlayer(roomcode, playerid, update=true) {
     if(update) {
         io.to(roomcode).emit('update players', encodeRoomPlayers(room.players))
     }
+}
+
+function createBoard(roomcode) {
+    var b = new Board()
+    b.fromArray(require('./board/shapes/shape1.js'))
+    b.shuffleTileTypes()
+    
+    console.log(b)
+    io.to(roomcode).emit('create board', b)
 }
 
 io.on('connection', (socket) => {
@@ -124,6 +134,8 @@ io.on('connection', (socket) => {
         
         socket.emit('joined lobby', roomcode)
         io.to(roomcode).emit('update players', encodeRoomPlayers(room.players))
+        
+        createBoard(roomcode)
     })
     
     socket.on('chat message', function(text) {

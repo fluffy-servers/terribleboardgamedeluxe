@@ -4,7 +4,6 @@
         <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
         
         <script src='js/board/texture.js'></script>
-        <script src='js/board/tile.js'></script>
         <script src='js/board/main.js'></script>
         
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
@@ -146,6 +145,12 @@
         if(gamestate.state == 'lobby') {
             lobbyPlayersList(players)
         }
+    });
+    
+    socket.on('create board', function(boardData) {
+        init()
+        generate_board(boardData.tileData)
+        console.log('Created board!')
     });
     
     // Key handlers to handle chat
