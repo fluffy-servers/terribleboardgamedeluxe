@@ -82,16 +82,11 @@ function generate_board(boardData) {
         t.position.x = xx
         t.position.z = yy
     }
-
-    // Make foxes
-    makeFox(0, 0)
-    makeFox(3, 2)
-    makeFox(1, 4)
 }
 
-function makeFox(x, y) {
+function makeFox(x, y, id = 0) {
     // Add a fox sprite
-    var foxTexture = textures.fox1
+    var foxTexture = textures['fox' + id]
     var foxMaterial = new THREE.SpriteMaterial({ map: foxTexture })
     var sprite = new THREE.Sprite(foxMaterial)
     scene.add(sprite)
