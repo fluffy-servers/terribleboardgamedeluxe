@@ -1,184 +1,284 @@
 <html>
-    <head>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.js'></script>
-        <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
-        
-        <script src='js/board/texture.js'></script>
-        <script src='js/board/main.js'></script>
-        
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-pink.min.css" />
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Oswald&display=swap" rel="stylesheet">
-        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-        
-        <link rel="stylesheet" href="style/main.css">
-        <link rel="stylesheet" href="style/login.css">
-    </head>
-    <body>
-        <div id='login'>
-            <div class='loginbox'>
-                <h1> Login </h1>
-                <p id='loginmessage'>Enter a room code and choose a username!</p>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="roomcode" maxlength="4" autocomplete="off">
-                    <label class="mdl-textfield__label" for="roomcode">Room Code</label>
-                </div>
-                
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="username" maxlength="20" autocomplete="off">
-                    <label class="mdl-textfield__label" for="username">Username</label>
-                </div>
-                <button id='joinbutton' class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick='attemptLogin()'>
-                    Join Game
-                </button>
-            </div>
+
+<head>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+
+    <script src='js/board/texture.js'></script>
+    <script src='js/board/main.js'></script>
+
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-pink.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Oswald&display=swap" rel="stylesheet">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/login.css">
+</head>
+
+<body>
+    <div id='mainroom'>
+        <div class='loginbox'>
+            <h1>Terrible Board Game</h1>
+            <h2>[Deluxe Edition!]</h2>
+
+            <button id='main-createroom-button'
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                onclick='createRoomScreen()'>
+                Create Room
+            </button>
+
+            <button id='main-joinroom-button'
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                onclick='joinRoomScreen()'>
+                Join Room
+            </button>
         </div>
-        
-        <div id='lobby' class='hidden'>
-            <div class='lobbybox'>
-                <h1> Lobby </h1>
-                <h2> Room: <b id='lobby-roomcode'>????</b></h2>
-                
-                <ul id='lobby-players-list'>
-                </ul>
+    </div>
+
+    <div id='joinroom'>
+        <div class='loginbox'>
+            <h1> Join a Room </h1>
+            <p id='loginmessage-join'>Enter a room code and choose a username!</p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="join-roomcode" maxlength="4" autocomplete="off">
+                <label class="mdl-textfield__label" for="roomcode">Room Code</label>
             </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="join-username" maxlength="20" autocomplete="off">
+                <label class="mdl-textfield__label" for="username">Username</label>
+            </div>
+            <button id='joinbutton'
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                onclick='attemptLogin()'>
+                Join Room
+            </button>
         </div>
-        
-        <div id='chat' class='hidden'>
-            <div class='chatheader'> Chat </div>
-            <div id='chatbody'>
-                <p>Welcome to the chat! Please be respectful to others.</p>
+    </div>
+
+    <div id='createroom'>
+        <div class='loginbox'>
+            <h1> Create a room </h1>
+            <p id='loginmessage-create'>Choose a username!</p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="create-username" maxlength="20" autocomplete="off">
+                <label class="mdl-textfield__label" for="username">Username</label>
             </div>
-            <div id='chatfooter' class='hidden'>
-                <input id='chatmessage'></input>
-                <button id='chatsend' onclick='sendChatMessage()'>Send</button>
-            </div>
+
+            <button id='joinbutton'
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                onclick='attemptCreate()'>
+                Create Room
+            </button>
         </div>
-        
-        <canvas id='boardcanvas'></canvas>
-    </body>
-    <script>
-    var socket = io();
+    </div>
+
+    <div id='lobby'>
+        <div class='lobbybox'>
+            <h1> Lobby </h1>
+            <h2> Room: <b id='lobby-roomcode'>????</b></h2>
+
+            <ul id='lobby-players-list'>
+            </ul>
+            <button id='startbutton'
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                onclick='attemptStart()'>
+                Start Game
+            </button>
+        </div>
+    </div>
+
+    <div id=' chat' class='hidden'>
+        <div class='chatheader'> Chat </div>
+        <div id='chatbody'>
+            <p>Welcome to the chat! Please be respectful to others.</p>
+        </div>
+        <div id='chatfooter' class='hidden'>
+            <input id='chatmessage'></input>
+            <button id='chatsend' onclick='sendChatMessage()'>Send</button>
+        </div>
+    </div>
+
+    <canvas id='boardcanvas'></canvas>
+</body>
+<script>
+    var socket = io()
     var gamestate = {}
     gamestate.state = 'login'
     gamestate.chatOpen = false
-    
-    function attemptLogin() {
-        var roomcode = document.getElementById('roomcode').value;
-        var username = document.getElementById('username').value;
-        socket.emit('join game', roomcode, username);
+
+    function joinRoomScreen() {
+        document.getElementById('mainroom').style.display = 'none'
+        document.getElementById('joinroom').style.display = 'block'
     }
-    
+
+    function createRoomScreen() {
+        document.getElementById('mainroom').style.display = 'none'
+        document.getElementById('createroom').style.display = 'block'
+    }
+
+    function mainRoomScreen() {
+        document.getElementById('createroom').style.display = 'none'
+        document.getElementById('joinroom').style.display = 'none'
+        document.getElementById('mainroom').style.display = 'block'
+    }
+
+    function lobbyScreen() {
+        document.getElementById('createroom').style.display = 'none'
+        document.getElementById('joinroom').style.display = 'none'
+        document.getElementById('mainroom').style.display = 'none'
+        document.getElementById('lobby').style.display = 'block'
+    }
+
+    function attemptLogin() {
+        var roomcode = document.getElementById('join-roomcode').value
+        var username = document.getElementById('join-username').value
+        socket.emit('join game', roomcode, username)
+    }
+
+    function attemptCreate() {
+        var username = document.getElementById('create-username').value
+        socket.emit('create game', username)
+    }
+
+    function attemptStart() {
+        socket.emit('start game')
+    }
+
     function lobbyPlayersList(players) {
         var list = document.getElementById('lobby-players-list')
         list.innerHTML = ''
-        
+
         // Create a row in the list for each player
-        for(var id in players) {
+        for (var id in players) {
             var player = players[id]
-            if(!player) continue;
-            
+            if (!player) continue
+
             var item = document.createElement('li')
             var avatar = document.createElement('img')
             avatar.src = 'assets/board/sprite/fox_hr' + id + '.png'
-            
+
             var text = document.createElement('span')
             text.innerHTML = player.username
-            
+
             item.appendChild(avatar)
             item.appendChild(text)
             list.appendChild(item)
         }
     }
-    
+
     function openChatBox() {
-        document.getElementById('chatfooter').classList.remove('hidden');
-        document.getElementById('chat').style.height = '450px';
-        document.getElementById('chatmessage').focus();
-        gamestate.chatOpen = true;
+        document.getElementById('chatfooter').classList.remove('hidden')
+        document.getElementById('chat').style.height = '450px'
+        document.getElementById('chatmessage').focus()
+        gamestate.chatOpen = true
     }
-    
+
     function closeChatBox() {
-        document.getElementById('chat').style.height = '32px';
-        document.getElementById('chatfooter').classList.add('hidden');
-        gamestate.chatOpen = false;
+        document.getElementById('chat').style.height = '32px'
+        document.getElementById('chatfooter').classList.add('hidden')
+        gamestate.chatOpen = false
     }
-    
+
     function sendChatMessage() {
-        if(gamestate.state == 'login' || !gamestate.chatOpen) return;
-        
+        if (gamestate.state == 'login' || !gamestate.chatOpen) return
+
         var text = document.getElementById('chatmessage').value
         socket.emit('chat message', text)
         document.getElementById('chatmessage').value = ''
     }
-    
-    socket.on('chat message', function(username, text) {
+
+    socket.on('chat message', function (username, text) {
         var body = document.getElementById('chatbody')
         var msg = document.createElement('p')
         var name = document.createElement('b')
         name.innerHTML = username + ': '
         var content = document.createTextNode(text)
-        
+
         msg.appendChild(name)
         msg.appendChild(content)
         body.appendChild(msg)
-        body.scrollTop = body.scrollHeight;
-    });
-    
-    socket.on('login error', function(text) {
-        var msg = document.getElementById('loginmessage')
+        body.scrollTop = body.scrollHeight
+    })
+
+    socket.on('login error', function (text) {
+        var msg = document.getElementById('loginmessage-join')
         msg.innerHTML = text
         msg.classList.add('loginerror')
-    });
-    
-    socket.on('joined lobby', function(roomcode) {
+    })
+
+    socket.on('joined lobby', function (roomcode) {
         console.log('Connected to room:', roomcode)
         gamestate.roomcode = roomcode
         gamestate.state = 'lobby'
-        document.getElementById('login').classList.add('hidden')
-        document.getElementById('lobby').classList.remove('hidden')
-        document.getElementById('chat').classList.remove('hidden')
+        lobbyScreen()
+
         document.getElementById('lobby-roomcode').innerHTML = roomcode
-    });
-    
-    socket.on('update players', function(players) {
-        if(gamestate.state == 'lobby') {
+    })
+
+    socket.on('update players', function (players) {
+        if (gamestate.state == 'lobby') {
             lobbyPlayersList(players)
         }
-    });
-    
-    socket.on('create board', function(boardData) {
+    })
+
+    socket.on('create board', function (boardData) {
         init()
         generate_board(boardData.tileData)
         console.log('Created board!')
-    });
-    
+    })
+
+    socket.on('lobby owner', function () {
+        document.getElementById('startbutton').style.display = 'block'
+    })
+
+    socket.on('start game', function () {
+        document.getElementById('lobby').style.display = 'none'
+    })
+
+    socket.on('update player positions', function (positions) {
+        console.log(positions)
+        for (var id in positions) {
+            const position = positions[id]
+            makeFox(position.x, position.y, id)
+        }
+    })
+
     // Key handlers to handle chat
-    document.onkeydown = function(e) {
-        if(gamestate.state == 'login') return;
-        
-        e = e || window.event;
-        if(e.keyCode == 84 && !gamestate.chatOpen) {
-            e.preventDefault();
-            openChatBox();
-        } else if(e.keyCode == 27 && gamestate.chatOpen) {
-            e.preventDefault();
-            closeChatBox();
+    document.onkeydown = function (e) {
+        if (gamestate.state == 'login') return
+
+        e = e || window.event
+        if (e.keyCode == 84 && !gamestate.chatOpen) {
+            e.preventDefault()
+            openChatBox()
+        } else if (e.keyCode == 27 && gamestate.chatOpen) {
+            e.preventDefault()
+            closeChatBox()
         }
-    };
-    
-    document.getElementById('chatmessage').addEventListener('keyup', function(e) {
-        if(e.keyCode == 13) {
-            e.preventDefault();
-            sendChatMessage();
+    }
+
+    document.getElementById('chatmessage').addEventListener('keyup', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault()
+            sendChatMessage()
         }
-    });
-    
-    document.getElementById('username').addEventListener('keyup', function(e) {
-        if(e.keyCode == 13) {
-            e.preventDefault();
-            attemptLogin();
+    })
+
+    document.getElementById('join-username').addEventListener('keyup', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault()
+            attemptLogin()
         }
-    });
-    </script>
+    })
+
+    document.getElementById('create-username').addEventListener('keyup', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault()
+            attemptCreate()
+        }
+    })
+</script>
+
 </html>
