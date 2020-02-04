@@ -17,16 +17,7 @@ server.listen(port, function () {
 app.use(express.static('public'))
 
 const MAX_PLAYERS = 8
-
-var rooms = {
-    TEST: {
-        roomcode: 'TEST',
-        gamestate: 'lobby',
-        players: [],
-        board: createBoard(),
-        ownerID: null
-    }
-}
+var rooms = {}
 
 // Encode the list of players into a format that can be sent through sockets
 // This leaves gaps for players that are not currently in the game
