@@ -14,8 +14,10 @@
 </head>
 
 <body>
-    <div id='mainroom'>
-        <div class='loginbox'>
+    <div class='container'>
+        <div id='background'></div>
+
+        <div class='loginbox' id='mainroom'>
             <h1>Terrible Board Game</h1>
             <h2>[Deluxe Edition!]</h2>
 
@@ -31,10 +33,8 @@
                 Join Room
             </button>
         </div>
-    </div>
 
-    <div id='joinroom'>
-        <div class='loginbox'>
+        <div class='loginbox' id='joinroom'>
             <h1> Join a Room </h1>
             <p id='loginmessage-join'>Enter a room code and choose a username!</p>
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -52,10 +52,8 @@
                 Join Room
             </button>
         </div>
-    </div>
 
-    <div id='createroom'>
-        <div class='loginbox'>
+        <div class='loginbox' id='createroom'>
             <h1> Create a room </h1>
             <p id='loginmessage-create'>Choose a username!</p>
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -69,10 +67,8 @@
                 Create Room
             </button>
         </div>
-    </div>
 
-    <div id='lobby'>
-        <div class='lobbybox'>
+        <div class='lobbybox' id='lobby'>
             <h1> Lobby </h1>
             <h2> Room: <b id='lobby-roomcode'>????</b></h2>
 
@@ -84,9 +80,16 @@
                 Start Game
             </button>
         </div>
+
+        <div class='gamebox' id='game'>
+            <!-- Intentionally left blank -->
+        </div>
+
+        <canvas id='boardcanvas'></canvas>
     </div>
 
-    <div id=' chat' class='hidden'>
+
+    <div id='chat' class='hidden'>
         <div class='chatheader'> Chat </div>
         <div id='chatbody'>
             <p>Welcome to the chat! Please be respectful to others.</p>
@@ -96,8 +99,6 @@
             <button id='chatsend' onclick='sendChatMessage()'>Send</button>
         </div>
     </div>
-
-    <canvas id='boardcanvas'></canvas>
 </body>
 <!-- 
     Yes I know this kinda sucks

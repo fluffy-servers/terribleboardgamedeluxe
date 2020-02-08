@@ -1,13 +1,19 @@
-#joinroom, #createroom, #mainroom {
+.container {
     position: absolute;
     width: 100%; 
     height: 100%;
-    
+}
+
+#background {
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+
     background: url('../assets/background.png');
     animation: 30s background-scroll infinite linear;
 }
 
-#joinroom, #createroom, #lobby {
+#joinroom, #createroom, #lobby, #game {
     display: none;
 }
 
@@ -44,16 +50,6 @@
 
 .mdl-textfield {
     font-family: 'Montserrat', sans-serif;
-}
-
-
-#lobby {
-    position: absolute;
-    width: 100%; 
-    height: 100%;
-    
-    background: url('../assets/background.png');
-    animation: 30s background-scroll infinite linear;
 }
 
 .lobbybox {
