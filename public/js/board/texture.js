@@ -15,4 +15,6 @@ var textures = {
     tile_mystery: new THREE.TextureLoader().load("assets/board/tile/mystery.png"),
     tile_shop: new THREE.TextureLoader().load("assets/board/tile/shop.png"),
     tile_star: new THREE.TextureLoader().load("assets/board/tile/star.png"),
+
+    ground: new THREE.TextureLoader().load("assets/board/ground.png")
 }
