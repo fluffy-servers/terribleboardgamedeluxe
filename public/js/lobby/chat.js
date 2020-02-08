@@ -1,16 +1,17 @@
 // Open the chatbox
 function openChatBox() {
-    if (gameController.chatOpen) {
+    if (gameController.chatOpen && gameController.chatTransitionComplete) {
         document.getElementById('chatinput').focus()
     } else {
-        document.getElementById('chat').style.bottom = '0'
-        document.getElementById('chatinput').focus()
+        document.getElementById('chat').style.bottom = '0px'
         gameController.chatOpen = true
+        gameController.chatTransitionComplete = false
     }
 }
 
 // Close the chatbox
 function closeChatBox() {
+    document.getElementById('chatinput').blur()
     document.getElementById('chat').style.bottom = '-418px'
     gameController.chatOpen = false
 }
@@ -40,7 +41,6 @@ socket.on('chat message', function (username, text) {
 
 // Global key handlers to open and close chat
 window.addEventListener('keydown', e => {
-    console.log('Checking chat')
     if (gameController.state == 'login') return
 
     e = e || window.event
@@ -60,3 +60,10 @@ document.getElementById('chatinput').addEventListener('keyup', function (e) {
         sendChatMessage()
     }
 })
+
+document.getElementById('chat').addEventListener("transitionend", function (e) {
+    if (gameController.chatOpen) {
+        document.getElementById('chatinput').focus()
+        gameController.chatTransitionComplete = true
+    }
+});
