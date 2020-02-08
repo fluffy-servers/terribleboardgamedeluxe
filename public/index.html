@@ -3,6 +3,7 @@
 <head>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-pink.min.css" />
@@ -46,10 +47,16 @@
                 <input class="mdl-textfield__input" type="text" id="join-username" maxlength="20" autocomplete="off">
                 <label class="mdl-textfield__label" for="username">Username</label>
             </div>
+
+
             <button id='joinbutton'
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                 onclick='attemptLogin()'>
                 Join Room
+            </button>
+
+            <button id='backbutton' onclick='mainRoomScreen()'>
+                🡄
             </button>
         </div>
 
@@ -61,10 +68,23 @@
                 <label class="mdl-textfield__label" for="username">Username</label>
             </div>
 
+            <br>
+            <label for='map-select'>Board Style:</label>
+            <select id='map-select'>
+                <option value='random'>Random</option>
+                <option value='waffle'>Waffle</option>
+                <option value='board-test'>Classic</option>
+            </select>
+
+
             <button id='joinbutton'
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                 onclick='attemptCreate()'>
                 Create Room
+            </button>
+
+            <button id='backbutton' onclick='mainRoomScreen()'>
+                🡄
             </button>
         </div>
 
@@ -93,10 +113,10 @@
         <div class='chatheader'> Chat </div>
         <div id='chatbody'>
             <p>Welcome to the chat! Please be respectful to others.</p>
-        </div>
-        <div id='chatfooter' class='hidden'>
-            <input id='chatmessage'></input>
-            <button id='chatsend' onclick='sendChatMessage()'>Send</button>
+            <div id='chatfooter'>
+                <input id='chatmessage'></input>
+                <button id='chatsend' onclick='sendChatMessage()'>Send</button>
+            </div>
         </div>
     </div>
 </body>

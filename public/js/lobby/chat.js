@@ -1,15 +1,17 @@
 // Open the chatbox
 function openChatBox() {
-    document.getElementById('chatfooter').classList.remove('hidden')
-    document.getElementById('chat').style.height = '450px'
-    document.getElementById('chatmessage').focus()
-    gameController.chatOpen = true
+    if (gameController.chatOpen) {
+        document.getElementById('chatmessage').focus()
+    } else {
+        document.getElementById('chat').style.height = '450px'
+        document.getElementById('chatmessage').focus()
+        gameController.chatOpen = true
+    }
 }
 
 // Close the chatbox
 function closeChatBox() {
     document.getElementById('chat').style.height = '32px'
-    document.getElementById('chatfooter').classList.add('hidden')
     gameController.chatOpen = false
 }
 
@@ -38,10 +40,11 @@ socket.on('chat message', function (username, text) {
 
 // Global key handlers to open and close chat
 window.addEventListener('keydown', e => {
+    console.log('Checking chat')
     if (gameController.state == 'login') return
 
     e = e || window.event
-    if (e.keyCode == 84 && !gameController.chatOpen) {
+    if (e.keyCode == 84) {
         e.preventDefault()
         openChatBox()
     } else if (e.keyCode == 27 && gameController.chatOpen) {

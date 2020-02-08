@@ -47,7 +47,7 @@ function createTile(texture) {
 
 // Setup lighting for the scene
 function lighting() {
-    const distance = 50
+    const distance = 25
     var sun = new THREE.DirectionalLight(0xffffff, 1)
     sun.position.set(-0.9 * distance, 1 * distance, 0.5 * distance)
 
@@ -58,8 +58,8 @@ function lighting() {
     sun.shadow.camera.top = distance
     sun.shadow.camera.bottom = -distance
 
-    sun.shadow.mapSize.width = 2048
-    sun.shadow.mapSize.height = 2048
+    sun.shadow.mapSize.width = 4096
+    sun.shadow.mapSize.height = 4096
     scene.add(sun)
 
     // Ambient hemisphere light

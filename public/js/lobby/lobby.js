@@ -23,6 +23,8 @@ function lobbyScreen() {
     document.getElementById('joinroom').style.display = 'none'
     document.getElementById('mainroom').style.display = 'none'
     document.getElementById('lobby').style.display = 'block'
+
+    document.getElementById('chat').classList.remove('hidden')
 }
 
 // Attempt to join an existing room
@@ -35,7 +37,8 @@ function attemptLogin() {
 // Attempt to create a new room
 function attemptCreate() {
     var username = document.getElementById('create-username').value
-    socket.emit('create game', username)
+    var boardType = document.getElementById('map-select').value
+    socket.emit('create game', username, boardType)
 }
 
 // Attempt to start the game
