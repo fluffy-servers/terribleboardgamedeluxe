@@ -19,7 +19,7 @@ Board.prototype.fromArray = function (array) {
     // Create a simple 2D grid
     // This helps
     var grid = []
-    var size = 10
+    var size = 100
     for (var i = 0; i < size; i++) {
         grid[i] = []
     }
