@@ -31,67 +31,63 @@ h3 {
 }
 
 #chat {
+    display: none;
+    
     position: absolute;
-    bottom: 0;
+    bottom: -418px;
     right: 32px;
     width: 300px;
-    height: 32px;
     z-index: 2;
-    
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    
-    transition: height 1s ease;
+    height: 450px;
+    background-color: #ecf0f1;
 }
 
-.chatheader {
+#chatheader {
     background-color: #2196f3;
     color: white;
     font-weight: bold;
     text-align: center;
+
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
     height: 32px;
     line-height: 32px;
 }
 
-#chatbody {
+#chatmessages {
     position: relative;
-    box-sizing: border-box;
     width: 100%;
-    height: calc(100% - 32px);
-    
-    padding: 6px;
-    padding-bottom: 24px;
-    
-    border-left: 4px solid #2196f3;
-    border-right: 4px solid #2196f3;
-    background-color: #ecf0f1;
-    
+    height: calc(100% - 64px);
+    box-sizing: border-box;
+
     overflow: scroll;
     overflow-x: hidden;
+
+    padding: 6px;
+
+    border-left: 4px solid #2196f3;
+    border-right: 4px solid #2196f3;
 }
 
-#chatbody p {
+#chatmessages p {
     display: block;
     width: 100%;
     border-bottom: 1px solid #bdc3c7;
-    margin-top: 6px;
+    
     margin: 0;
+    margin-top: 4px;
     padding-bottom: 6px;
 }
 
 #chatfooter {
     position: absolute;
     bottom: 0;
-    
-    box-sizing: border-box;
-    height: 32px;
     width: 100%;
-    
-    padding-left: 4px;
-    padding-right: 4px;
+    height: 32px;
+    box-sizing: border-box;
+
+    border-left: 4px solid #2196f3;
+    border-right: 4px solid #2196f3;
 }
 
 #chatfooter input {
@@ -104,12 +100,11 @@ h3 {
 }
 
 #chatfooter button {
-    position: relative;
     float: right;
     height: 100%;
     width: 20%;
     
-    font-family: Roboto;
+    font-family: 'Roboto' sans-serif;
     font-weight: 500;
     font-size: 14px;
     background-color: #e91e63;

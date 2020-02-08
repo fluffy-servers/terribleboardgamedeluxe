@@ -1,17 +1,17 @@
 // Open the chatbox
 function openChatBox() {
     if (gameController.chatOpen) {
-        document.getElementById('chatmessage').focus()
+        document.getElementById('chatinput').focus()
     } else {
-        document.getElementById('chat').style.height = '450px'
-        document.getElementById('chatmessage').focus()
+        document.getElementById('chat').style.bottom = '0'
+        document.getElementById('chatinput').focus()
         gameController.chatOpen = true
     }
 }
 
 // Close the chatbox
 function closeChatBox() {
-    document.getElementById('chat').style.height = '32px'
+    document.getElementById('chat').style.bottom = '-418px'
     gameController.chatOpen = false
 }
 
@@ -19,14 +19,14 @@ function closeChatBox() {
 function sendChatMessage() {
     if (gameController.state == 'login' || !gameController.chatOpen) return
 
-    var text = document.getElementById('chatmessage').value
+    var text = document.getElementById('chatinput').value
     socket.emit('chat message', text)
-    document.getElementById('chatmessage').value = ''
+    document.getElementById('chatinput').value = ''
 }
 
 // Receive and display chat messages
 socket.on('chat message', function (username, text) {
-    var body = document.getElementById('chatbody')
+    var body = document.getElementById('chatmessages')
     var msg = document.createElement('p')
     var name = document.createElement('b')
     name.innerHTML = username + ': '
@@ -44,7 +44,7 @@ window.addEventListener('keydown', e => {
     if (gameController.state == 'login') return
 
     e = e || window.event
-    if (e.keyCode == 84) {
+    if (e.keyCode == 84 && document.activeElement.id != 'chatinput') {
         e.preventDefault()
         openChatBox()
     } else if (e.keyCode == 27 && gameController.chatOpen) {
@@ -54,8 +54,8 @@ window.addEventListener('keydown', e => {
 })
 
 // Send message on chat enter
-document.getElementById('chatmessage').addEventListener('keyup', function (e) {
-    if (gameController.state != 'lobby' && e.keyCode == 13) {
+document.getElementById('chatinput').addEventListener('keyup', function (e) {
+    if (gameController.state != 'login' && e.keyCode == 13) {
         e.preventDefault()
         sendChatMessage()
     }

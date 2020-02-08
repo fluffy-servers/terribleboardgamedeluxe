@@ -24,7 +24,7 @@ function lobbyScreen() {
     document.getElementById('mainroom').style.display = 'none'
     document.getElementById('lobby').style.display = 'block'
 
-    document.getElementById('chat').classList.remove('hidden')
+    document.getElementById('chat').style.display = 'block'
 }
 
 // Attempt to join an existing room
