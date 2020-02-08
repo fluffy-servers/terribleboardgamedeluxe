@@ -3,6 +3,7 @@ const http = require('http')
 const socket = require('socket.io')
 const sanitize = require('sanitize-html')
 const port = process.env.PORT || 3000
+const { performance } = require('perf_hooks')
 
 const app = express()
 const server = http.createServer(app)
@@ -163,7 +164,7 @@ io.on('connection', (socket) => {
         socket.join(roomcode)
         console.log(username, 'has joined room:', roomcode)
 
-        socket.emit('joined lobby', roomcode)
+        socket.emit('joined lobby', roomcode, id)
         socket.emit('create board', room.board)
         io.to(roomcode).emit('update players', encodeRoomPlayers(room.players))
     })
@@ -192,7 +193,7 @@ io.on('connection', (socket) => {
         socket.join(roomcode)
         console.log(username, 'has created room:', roomcode)
 
-        socket.emit('joined lobby', roomcode)
+        socket.emit('joined lobby', roomcode, id)
         socket.emit('create board', room.board)
         socket.emit('lobby owner')
         io.to(roomcode).emit('update players', encodeRoomPlayers(room.players))
@@ -224,8 +225,8 @@ io.on('connection', (socket) => {
 
     socket.on('chat message', function (text) {
         if (!socket.gameRoom) return
-        let roomcode = socket.gameRoom
-        let username = rooms[roomcode].players[socket.playerID].username
+        const roomcode = socket.gameRoom
+        const username = rooms[roomcode].players[socket.playerID].username
         text = sanitize(text).trim()
 
         // Check some basic anti spam stuff
@@ -239,6 +240,19 @@ io.on('connection', (socket) => {
     socket.on('disconnect', function () {
         if (socket.gameRoom) {
             removePlayer(socket.gameRoom, socket.playerID)
+        }
+    })
+
+    socket.on('movement test', function (direction) {
+        if (performance.now() - socket.lastMove < 500) return
+
+        const roomcode = socket.gameRoom
+        const room = rooms[roomcode]
+        const newTile = room.board.attemptMove(socket.playerID, direction)
+
+        if (newTile) {
+            socket.lastMove = performance.now()
+            io.to(roomcode).emit('animate fox', socket.playerID, newTile.x, newTile.y, newTile.type)
         }
     })
 })

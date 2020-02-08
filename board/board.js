@@ -2,6 +2,7 @@ function Board() {
     this.tileData = {}
     this.adjList = {}
     this.players = {}
+    this.tileGrid = []
 }
 
 Board.prototype.addTile = function (id) {
@@ -65,6 +66,8 @@ Board.prototype.fromArray = function (array) {
         this.addEdge(tile, tLeft)
         this.addEdge(tile, tRight)
     }
+
+    this.tileGrid = grid
 }
 
 Board.prototype.shuffleTileTypes = function () {
@@ -112,6 +115,32 @@ Board.prototype.updatePlayer = function (id, x, y) {
 
 Board.prototype.removePlayer = function (id) {
     this.players[id] = null
+}
+
+Board.prototype.checkLink = function (curPos, newPos) {
+    const curTile = this.tileGrid[curPos.x][curPos.y]
+    for (let link of this.adjList[curTile]) {
+        const checkTile = this.tileData[link]
+        if (checkTile.x == newPos.x && checkTile.y == newPos.y) {
+            return checkTile
+        }
+    }
+
+    return null
+}
+
+Board.prototype.attemptMove = function (id, direction) {
+    const curPos = this.players[id]
+    const newPos = { x: curPos.x + direction[0], y: curPos.y + direction[1] }
+
+    const newTile = this.checkLink(curPos, newPos)
+    if (newTile) {
+        this.players[id].x = newTile.x
+        this.players[id].y = newTile.y
+        return newTile
+    } else {
+        return false
+    }
 }
 
 module.exports = Board

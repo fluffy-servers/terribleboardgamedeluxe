@@ -1,7 +1,7 @@
 var scene, camera, renderer, starttime
 const zoomd = 5
 
-var player_sprites = []
+var player_sprites = {}
 var pending_animations = []
 
 // Initialise the ThreeJS environment
@@ -64,25 +64,38 @@ function makeFox(x, y, id = 0) {
     sprite.position.z = position[1] //- 0.125
 
     // Store the sprite (for moving later)
-    player_sprites.push(sprite)
+    player_sprites[id] = sprite
+
+    // Update camera
+    if (id == gameController.playerID) {
+        camera.position.set(zoomd + sprite.position.x, zoomd, zoomd + sprite.position.z)
+    }
 }
 
 // Generate an animation object for a fox
-function startFoxMovement(sprite, newX, newY) {
-    var position = translateCoordinate(newX, newY)
-    var oldX = sprite.position.x
-    var oldY = sprite.position.z
+function startFoxMovement(id = 0, newX, newY) {
+    let sprite = player_sprites[id]
+    if (!sprite) return
+
+    const position = translateCoordinate(newX, newY)
+    const oldX = sprite.position.x
+    const oldY = sprite.position.z
 
     const jumpStrength = 5
 
     function animationCallback(delta) {
-        var currentX = oldX + (position[0] - oldX) * delta
-        var currentY = oldY + (position[1] - oldY) * delta
-        var jumpZ = jumpStrength * (0.25 - Math.pow(delta - 0.5, 2))
+        const currentX = oldX + (position[0] - oldX) * delta
+        const currentY = oldY + (position[1] - oldY) * delta
+        const jumpZ = jumpStrength * (0.25 - Math.pow(delta - 0.5, 2))
 
         sprite.position.x = currentX
         sprite.position.y = 0.6 + jumpZ
         sprite.position.z = currentY
+
+        // Update camera
+        if (id == gameController.playerID) {
+            camera.position.set(zoomd + sprite.position.x, zoomd, zoomd + sprite.position.z)
+        }
     }
 
     pending_animations.push({

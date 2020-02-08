@@ -74,10 +74,11 @@ socket.on('login error', function (text) {
 })
 
 // Handle successful joins
-socket.on('joined lobby', function (roomcode) {
+socket.on('joined lobby', function (roomcode, id) {
     console.log('Connected to room:', roomcode)
     gameController.roomcode = roomcode
     gameController.state = 'lobby'
+    gameController.playerID = id
     lobbyScreen()
 
     document.getElementById('lobby-roomcode').innerHTML = roomcode

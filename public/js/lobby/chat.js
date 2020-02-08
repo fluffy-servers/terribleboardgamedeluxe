@@ -37,7 +37,7 @@ socket.on('chat message', function (username, text) {
 })
 
 // Global key handlers to open and close chat
-document.onkeydown = function (e) {
+window.addEventListener('keydown', e => {
     if (gameController.state == 'login') return
 
     e = e || window.event
@@ -48,7 +48,7 @@ document.onkeydown = function (e) {
         e.preventDefault()
         closeChatBox()
     }
-}
+})
 
 // Send message on chat enter
 document.getElementById('chatmessage').addEventListener('keyup', function (e) {
