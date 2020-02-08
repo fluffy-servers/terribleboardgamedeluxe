@@ -1,14 +1,14 @@
-var express = require('express')
-var http = require('http')
-var socket = require('socket.io')
-var sanitize = require('sanitize-html')
-var port = process.env.PORT || 3000
+const express = require('express')
+const http = require('http')
+const socket = require('socket.io')
+const sanitize = require('sanitize-html')
+const port = process.env.PORT || 3000
 
-var app = express()
-var server = http.createServer(app)
-var io = socket(server)
+const app = express()
+const server = http.createServer(app)
+const io = socket(server)
 
-var Board = require('./board/board.js')
+const Board = require('./board/board.js')
 
 server.listen(port, function () {
     console.log('Server started on *:3000')
@@ -22,9 +22,9 @@ var rooms = {}
 // Encode the list of players into a format that can be sent through sockets
 // This leaves gaps for players that are not currently in the game
 function encodeRoomPlayers(players) {
-    var output = []
-    for (var i = 0; i < MAX_PLAYERS; i++) {
-        var player = players[i]
+    let output = []
+    for (let i = 0; i < MAX_PLAYERS; i++) {
+        let player = players[i]
         if (!player) {
             output.push(false)
         } else {
@@ -37,8 +37,8 @@ function encodeRoomPlayers(players) {
 
 // Register a new player into a room
 function addNewPlayer(roomcode, player, update = true) {
-    var room = rooms[roomcode]
-    for (var i = 0; i < MAX_PLAYERS; i++) {
+    let room = rooms[roomcode]
+    for (let i = 0; i < MAX_PLAYERS; i++) {
         if (!room.players[i]) {
             room.players[i] = player
             if (update) {
@@ -53,7 +53,7 @@ function addNewPlayer(roomcode, player, update = true) {
 
 // Remove a player from a room
 function removePlayer(roomcode, playerid, update = true) {
-    var room = rooms[roomcode]
+    let room = rooms[roomcode]
     room.players[playerid] = false
     if (update) {
         io.to(roomcode).emit('update players', encodeRoomPlayers(room.players))
@@ -62,7 +62,7 @@ function removePlayer(roomcode, playerid, update = true) {
 
 // Generate a new board for a room
 function createBoard() {
-    var b = new Board()
+    let b = new Board()
     b.fromArray(require('./board/shapes/shape1.js'))
     b.shuffleTileTypes()
     return b
@@ -72,7 +72,7 @@ function createBoard() {
 // This is a recursive function
 function randomString(n, base = '') {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789'
-    var char = letters[Math.floor(Math.random() * letters.length)]
+    let char = letters[Math.floor(Math.random() * letters.length)]
 
     if (n <= 1) {
         return base + char
@@ -121,7 +121,7 @@ io.on('connection', (socket) => {
             socket.emit('login error', 'Room is invalid')
             return
         }
-        var room = rooms[roomcode]
+        let room = rooms[roomcode]
 
         // Don't let people join games that are in progress
         // Might change this later
@@ -137,7 +137,7 @@ io.on('connection', (socket) => {
         }
 
         // Verify that the username isn't taken
-        for (var player of room.players) {
+        for (let player of room.players) {
             if (player.username == username) {
                 socket.emit('login error', 'Username is already taken')
                 return
@@ -145,11 +145,12 @@ io.on('connection', (socket) => {
         }
 
         // Add the player if there is space
-        var player = {
+        let player = {
             username: username,
             socket: socket
         }
-        var id = addNewPlayer(roomcode, player, false)
+
+        let id = addNewPlayer(roomcode, player, false)
         if (id < 0) {
             socket.emit('login error', 'Room is full')
             return
@@ -176,14 +177,14 @@ io.on('connection', (socket) => {
 
         // Create a new room
         const roomcode = createRoom()
-        var room = rooms[roomcode]
+        let room = rooms[roomcode]
 
         // Add the player to the room
-        var player = {
+        let player = {
             username: username,
             socket: socket
         }
-        var id = addNewPlayer(roomcode, player, false)
+        let id = addNewPlayer(roomcode, player, false)
 
         // Player has successfully created a room
         socket.gameRoom = roomcode
@@ -199,8 +200,8 @@ io.on('connection', (socket) => {
 
     socket.on('start game', function () {
         if (!socket.gameRoom) return
-        var roomcode = socket.gameRoom
-        var room = rooms[roomcode]
+        let roomcode = socket.gameRoom
+        let room = rooms[roomcode]
 
         if (room.ownerID == socket.playerID) {
             // Start the game
@@ -223,8 +224,8 @@ io.on('connection', (socket) => {
 
     socket.on('chat message', function (text) {
         if (!socket.gameRoom) return
-        var roomcode = socket.gameRoom
-        var username = rooms[roomcode].players[socket.playerID].username
+        let roomcode = socket.gameRoom
+        let username = rooms[roomcode].players[socket.playerID].username
         text = sanitize(text).trim()
 
         // Check some basic anti spam stuff
