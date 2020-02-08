@@ -2,8 +2,9 @@ const express = require('express')
 const http = require('http')
 const socket = require('socket.io')
 const sanitize = require('sanitize-html')
-const port = process.env.PORT || 3000
 const { performance } = require('perf_hooks')
+const fs = require('fs')
+const port = process.env.PORT || 3000
 
 const app = express()
 const server = http.createServer(app)
@@ -13,11 +14,13 @@ const Board = require('./board/board.js')
 
 server.listen(port, function () {
     console.log('Server started on *:3000')
+    loadBoardData()
 })
 
 app.use(express.static('public'))
 
 const MAX_PLAYERS = 8
+var boards = {}
 var rooms = {}
 
 // Encode the list of players into a format that can be sent through sockets
@@ -61,10 +64,35 @@ function removePlayer(roomcode, playerid, update = true) {
     }
 }
 
+function loadBoardData() {
+    boards = {}
+    // Search for any files in the board shapes folder
+    for (const filename of fs.readdirSync('./board/shapes/')) {
+        fs.readFile('./board/shapes/' + filename, (err, content) => {
+            if (err) {
+                console.error(err)
+                return
+            } else {
+                let boardName = filename.replace('.json', '')
+                let board = JSON.parse(content)
+                boards[boardName] = board
+            }
+        })
+    }
+}
+
 // Generate a new board for a room
-function createBoard() {
+function createBoard(boardType = 'random') {
+    let boardName
+    if (boardType == 'random') {
+        let boardNames = Object.keys(boards)
+        boardName = boardNames[boardNames.length * Math.random() << 0]
+    } else {
+        boardName = boardType
+    }
+
     let b = new Board()
-    b.fromArray(require('./board/shapes/shape1.js'))
+    b.fromArray(boards[boardName])
     b.shuffleTileTypes()
     return b
 }
@@ -84,7 +112,7 @@ function randomString(n, base = '') {
 
 // Create and register a new room
 // This generates a board and random roomcode
-function createRoom() {
+function createRoom(boardType = 'random') {
     // Generate a random room code
     let roomcode = randomString(4)
     if (rooms[roomcode]) {
@@ -96,7 +124,7 @@ function createRoom() {
         roomcode: roomcode,
         gamestate: 'lobby',
         players: [],
-        board: createBoard(),
+        board: createBoard(boardType),
         ownerID: 0
     }
     rooms[roomcode] = room
@@ -169,7 +197,7 @@ io.on('connection', (socket) => {
         io.to(roomcode).emit('update players', encodeRoomPlayers(room.players))
     })
 
-    socket.on('create game', function (username) {
+    socket.on('create game', function (username, boardType) {
         // Verify that the username is valid
         if (username.length > 20 || username.length < 1) {
             socket.emit('login error', 'Username is invalid')
@@ -177,7 +205,7 @@ io.on('connection', (socket) => {
         }
 
         // Create a new room
-        const roomcode = createRoom()
+        const roomcode = createRoom(boardType)
         let room = rooms[roomcode]
 
         // Add the player to the room
