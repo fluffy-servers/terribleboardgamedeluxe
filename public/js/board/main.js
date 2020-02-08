@@ -27,6 +27,7 @@ function init() {
     animate()
 }
 
+// Resize handler to keep the board steady
 function resize() {
     if (!scene) return;
 
@@ -40,50 +41,15 @@ function resize() {
 }
 window.addEventListener('resize', resize, false)
 
-function createTile(texture) {
-    var geom = new THREE.CubeGeometry(1, 0.2, 1)
-    var base_mat = new THREE.MeshLambertMaterial({ color: "#d1d8e0" })
-    var top_mat = new THREE.MeshLambertMaterial({ map: texture })
-
-    var tile = new THREE.Mesh(geom, [base_mat, base_mat, top_mat, base_mat, base_mat, base_mat])
-    scene.add(tile)
-    tile.position.y = 0.1
-
-    tile.castShadow = true
-    tile.receiveShadow = true
-
-    return tile
-}
-
+// Translate a grid coordinate to a world space coordinate
+// Tiles are spaced about 1.25 units apart
 function translateCoordinate(x, y) {
     var x = x * 1.25
     var y = y * 1.25
     return [x, y]
 }
 
-// Generate the board tiles
-function generate_board(boardData) {
-    // Add the ground
-    var geom = new THREE.PlaneGeometry(50, 50)
-    var material = new THREE.MeshLambertMaterial({ color: "#20bf6b" })
-    var plane = new THREE.Mesh(geom, material)
-    plane.rotation.x = -Math.PI / 2
-    plane.receiveShadow = true
-    scene.add(plane)
-
-    // Generate the tiles
-    for (var id in boardData) {
-        var tile = boardData[id]
-        var texture = textures['tile_' + tile.type]
-
-        var [xx, yy] = translateCoordinate(tile.x, tile.y)
-
-        var t = createTile(texture)
-        t.position.x = xx
-        t.position.z = yy
-    }
-}
-
+// Create a fox on a given grid tile
 function makeFox(x, y, id = 0) {
     // Add a fox sprite
     var foxTexture = textures['fox' + id]
@@ -94,24 +60,25 @@ function makeFox(x, y, id = 0) {
     // Position the fox
     var position = translateCoordinate(x, y)
     sprite.position.y = 0.6
-    sprite.position.x = position[0] - 0.125
-    sprite.position.z = position[1] - 0.125
+    sprite.position.x = position[0] //- 0.125
+    sprite.position.z = position[1] //- 0.125
 
     // Store the sprite (for moving later)
     player_sprites.push(sprite)
 }
 
+// Generate an animation object for a fox
 function startFoxMovement(sprite, newX, newY) {
     var position = translateCoordinate(newX, newY)
     var oldX = sprite.position.x
     var oldY = sprite.position.z
 
-    const strength = 5
+    const jumpStrength = 5
 
     function animationCallback(delta) {
         var currentX = oldX + (position[0] - oldX) * delta
         var currentY = oldY + (position[1] - oldY) * delta
-        var jumpZ = strength * (0.25 - Math.pow(delta - 0.5, 2))
+        var jumpZ = jumpStrength * (0.25 - Math.pow(delta - 0.5, 2))
 
         sprite.position.x = currentX
         sprite.position.y = 0.6 + jumpZ
@@ -119,38 +86,10 @@ function startFoxMovement(sprite, newX, newY) {
     }
 
     pending_animations.push({
-        starttime: performance.now(),
+        startTime: performance.now(),
         duration: 500,
         callback: animationCallback
     })
-}
-
-function animateFoxMovement(sprite, newX, newY) {
-    // Position the fox
-    var position = translateCoordinate(newX, newY)
-    sprite.position.y = 0.6
-    sprite.position.x = position[0] - 0.125
-    sprite.position.z = position[1] - 0.125
-}
-
-// Setup lighting for the scene
-function lighting() {
-    var sun = new THREE.DirectionalLight(0xffffff, 1)
-    sun.position.set(-0.9, 1, 0.5)
-    scene.add(sun)
-
-    // Shadows for the sun - to do
-    sun.castShadow = true
-    sun.shadow.mapSize.width = 512
-    sun.shadow.mapSize.height = 512
-    sun.shadow.camera.top = zoomd
-    sun.shadow.camera.bottom = zoomd
-    sun.shadow.camera.left = zoomd
-    sun.shadow.camera.right = zoomd
-
-    // Ambient hemisphere light
-    var hemisphere = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.4)
-    scene.add(hemisphere)
 }
 
 // Animation function
@@ -159,12 +98,17 @@ function animate(timestamp) {
     // Iterate animations backward so we can remove wihtout conflicts
     for (var i = pending_animations.length - 1; i >= 0; i--) {
         const animation = pending_animations[i]
-        var animation_delta = Math.min((timestamp - animation.starttime) / animation.duration, 1)
+        var animation_delta = Math.min((timestamp - animation.startTime) / animation.duration, 1)
         animation.callback(animation_delta)
 
         // Remove any completed animations
         if (animation_delta >= 1) {
             pending_animations.splice(i, 1)
+
+            // Run finishing function (if applicale)
+            if (animation.onFinish) {
+                animation.onFinish()
+            }
         }
     }
 
