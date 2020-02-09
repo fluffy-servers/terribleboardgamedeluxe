@@ -143,4 +143,8 @@ Board.prototype.attemptMove = function (id, direction) {
     }
 }
 
+Board.prototype.reverseDirection = function (direction) {
+    return [-direction[0], -direction[1]]
+}
+
 module.exports = Board

@@ -135,8 +135,8 @@ function createRoom(boardType = 'random') {
 io.on('connection', (socket) => {
     // Send a list of boards on connection
     socket.emit('boards list', Object.keys(boards))
-    
-    
+
+
     socket.on('join game', function (roomcode, username) {
         roomcode = roomcode.toUpperCase()
         username = sanitize(username).trim()
@@ -276,14 +276,20 @@ io.on('connection', (socket) => {
     })
 
     socket.on('movement test', function (direction) {
+        // Don't let players move too quickly
         if (performance.now() - socket.lastMove < 500) return
-
         const roomcode = socket.gameRoom
         const room = rooms[roomcode]
-        const newTile = room.board.attemptMove(socket.playerID, direction)
 
+        // Don't let players backtrack
+        let reverse = room.board.reverseDirection(direction)
+        if (socket.lastDirection && socket.lastDirection[0] == reverse[0] && socket.lastDirection[1] == reverse[1]) return
+
+        // Update player movement (if valid)
+        const newTile = room.board.attemptMove(socket.playerID, direction)
         if (newTile) {
             socket.lastMove = performance.now()
+            socket.lastDirection = direction
             io.to(roomcode).emit('animate fox', socket.playerID, newTile.x, newTile.y, newTile.type)
         }
     })
