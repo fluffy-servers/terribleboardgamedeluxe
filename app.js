@@ -82,9 +82,9 @@ function loadBoardData() {
 }
 
 // Generate a new board for a room
-function createBoard(boardType = 'random') {
+function createBoard(boardType = 'Random') {
     let boardName
-    if (boardType == 'random') {
+    if (boardType == 'Random') {
         let boardNames = Object.keys(boards)
         boardName = boardNames[boardNames.length * Math.random() << 0]
     } else {
@@ -112,7 +112,7 @@ function randomString(n, base = '') {
 
 // Create and register a new room
 // This generates a board and random roomcode
-function createRoom(boardType = 'random') {
+function createRoom(boardType = 'Random') {
     // Generate a random room code
     let roomcode = randomString(4)
     if (rooms[roomcode]) {
