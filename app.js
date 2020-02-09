@@ -133,6 +133,10 @@ function createRoom(boardType = 'random') {
 }
 
 io.on('connection', (socket) => {
+    // Send a list of boards on connection
+    socket.emit('boards list', Object.keys(boards))
+    
+    
     socket.on('join game', function (roomcode, username) {
         roomcode = roomcode.toUpperCase()
         username = sanitize(username).trim()

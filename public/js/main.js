@@ -8,6 +8,16 @@ function hideBackground() {
     document.getElementById('background').style.display = "none"
 }
 
+socket.on('boards list', function (boards) {
+    // Populate the map listing dropdown
+    const dropdown = document.getElementById('map-select')
+    for (let board of boards) {
+        let option = document.createElement('option')
+        option.text = board
+        dropdown.add(option)
+    }
+})
+
 socket.on('create board', function (boardData) {
     init()
     generate_board(boardData.tileData)
