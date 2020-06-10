@@ -1,2 +1,6 @@
-node_modules/
-package-lock.json
+# No node stuff
+*/node_modules/
+*/package-lock.json
+
+# Client distribution
+client/terribleboardgame-client-win32-x64
