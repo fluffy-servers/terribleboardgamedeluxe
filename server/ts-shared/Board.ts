@@ -1,3 +1,5 @@
+import * as fs from 'fs'
+
 export enum TileTypes {
     Battle,
     Draw,
@@ -25,9 +27,47 @@ export class Board {
     public players: any[] = []
     public tileGrid: number[][] = []
 
+    private static boardData: any = {}
+
+    public static loadBoardData() {
+        Board.boardData = {}
+        for (const filename of fs.readdirSync('./boards/')) {
+            fs.readFile('./boards/' + filename, (err, content) => {
+                if (err) {
+                    console.error(err)
+                    return
+                } else {
+                    const name = filename.replace('.json', '')
+                    const board = JSON.parse(content.toString())
+                    Board.boardData[name] = board
+                }
+            })
+        }
+    }
+
+    public static getBoardNames() {
+        return Object.keys(Board.boardData)
+    }
+
+    public static createBoard(nameRequest: string = 'Random') {
+        let name
+        if (nameRequest == 'Random') {
+            const boardNames = Object.keys(Board.boardData)
+            name = boardNames[boardNames.length * Math.random() << 0]
+        } else {
+            name = nameRequest
+        }
+
+        const b = new Board()
+        b.fromArray(Board.boardData[name])
+        b.shuffleTileTypes()
+        return b
+    }
+
     public constructor() {
         // ain't nobody here but us potatoes
         // you'll probably want to use fromArray to make a board
+        // also see the createBoard static method
     }
 
     public addTile(id: number, tile: Tile): void {
