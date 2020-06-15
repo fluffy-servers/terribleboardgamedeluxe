@@ -2,5 +2,10 @@
 */node_modules/
 */package-lock.json
 
+# No compiled TS
+*/dist/
+*/*/dist
+server/public/src/
+
 # Client distribution
 client/terribleboardgame-client-win32-x64
