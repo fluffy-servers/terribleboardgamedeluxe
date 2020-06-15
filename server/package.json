@@ -6,5 +6,8 @@
         "express": "^4.17.1",
         "sanitize-html": "^1.20.1",
         "socket.io": "^2.3.0"
+    },
+    "scripts": {
+        "build-client": "tsc -b ts-client && cp -r -T ts-client/dist public/src"
     }
 }
