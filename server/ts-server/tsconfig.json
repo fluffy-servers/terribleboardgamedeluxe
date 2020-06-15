@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "rootDir": ".",
+        // "outDir": "../dist",
+        "baseUrl": ".",
+        "paths": {
+            "ts-shared": [
+                "../ts-shared"
+            ]
+        }
+    },
+    "references": [
+        {
+            "path": "../ts-shared",
+        }
+    ]
+}
