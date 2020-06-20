@@ -23,14 +23,12 @@
             <h2>[Deluxe Edition!]</h2>
 
             <button id='main-createroom-button'
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                onclick='createRoomScreen()'>
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                 Create Room
             </button>
 
             <button id='main-joinroom-button'
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                onclick='joinRoomScreen()'>
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                 Join Room
             </button>
         </div>
@@ -50,12 +48,11 @@
 
 
             <button id='joinbutton'
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                onclick='attemptLogin()'>
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                 Join Room
             </button>
 
-            <button id='backbutton' onclick='mainRoomScreen()'>
+            <button id='backbutton-join'>
                 🡄
             </button>
         </div>
@@ -75,13 +72,12 @@
             </select>
 
 
-            <button id='joinbutton'
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                onclick='attemptCreate()'>
+            <button id='createbutton'
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                 Create Room
             </button>
 
-            <button id='backbutton' onclick='mainRoomScreen()'>
+            <button id='backbutton-create'>
                 🡄
             </button>
         </div>
@@ -93,8 +89,7 @@
             <ul id='lobby-players-list'>
             </ul>
             <button id='startbutton'
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                onclick='attemptStart()'>
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                 Start Game
             </button>
         </div>

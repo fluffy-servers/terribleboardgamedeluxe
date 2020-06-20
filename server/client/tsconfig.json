@@ -4,6 +4,7 @@
         "module": "es6",
         "moduleResolution": "node",
         "outDir": "./dist",
+        "allowSyntheticDefaultImports": true
     },
     "references": [
         {

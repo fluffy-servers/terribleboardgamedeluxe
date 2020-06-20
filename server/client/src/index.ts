@@ -1,3 +1,7 @@
-import { TileTypes } from "../../shared"
+import io from 'socket.io-client';
+import * as menu from './menu'
+import { GameController } from './GameController'
 
-console.log(TileTypes)
+// Setup the GameController for the menu screen
+GameController.socket = io()
+menu.bindSocketMenuEvents()

@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import { Board } from '../../shared'
+import { Board } from '../../shared/dist'
 
 export class BoardManager {
     private static boardData: any = {}

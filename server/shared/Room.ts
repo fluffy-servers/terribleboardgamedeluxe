@@ -1,5 +1,10 @@
 import { Board } from './Board'
 
+export enum RoomState {
+    Menu,
+    Lobby
+}
+
 export class Player {
 
 }
@@ -7,7 +12,7 @@ export class Player {
 export class Room {
     public readonly roomcode: string
     public players: any[] = []
-    public gamestate: string = 'lobby'
+    public gamestate: RoomState = RoomState.Lobby
     public board?: Board
     public ownerID: number = 0
 

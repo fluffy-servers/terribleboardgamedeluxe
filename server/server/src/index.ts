@@ -1,7 +1,7 @@
 import socket from 'socket.io'
 import sanitize from 'sanitize-html'
 import { server } from './server'
-import { Room } from '../../shared'
+import { Room } from '../../shared/dist'
 import { BoardManager } from './BoardManager'
 
 let rooms = {}
