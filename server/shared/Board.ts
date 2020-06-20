@@ -1,5 +1,3 @@
-import * as fs from 'fs'
-
 export enum TileTypes {
     Battle,
     Draw,
@@ -27,6 +25,7 @@ export class Board {
     public players: any[] = []
     public tileGrid: number[][] = []
 
+    /*
     private static boardData: any = {}
 
     public static loadBoardData() {
@@ -48,18 +47,11 @@ export class Board {
     public static getBoardNames() {
         return Object.keys(Board.boardData)
     }
+    */
 
-    public static createBoard(nameRequest: string = 'Random') {
-        let name
-        if (nameRequest == 'Random') {
-            const boardNames = Object.keys(Board.boardData)
-            name = boardNames[boardNames.length * Math.random() << 0]
-        } else {
-            name = nameRequest
-        }
-
+    public static createBoard(array: any[]): Board {
         const b = new Board()
-        b.fromArray(Board.boardData[name])
+        b.fromArray(array)
         b.shuffleTileTypes()
         return b
     }

@@ -1,13 +1,13 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "commonjs",
+        "module": "es6",
         "moduleResolution": "node",
-        "rootDir": ".",
         "outDir": "./dist",
     },
-    
     "references": [
-        { "path": "../ts-shared" }
+        {
+            "path": "../shared"
+        }
     ]
 }

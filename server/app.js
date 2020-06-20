@@ -19,7 +19,6 @@ server.listen(port, function () {
 
 app.use(express.static('public'))
 
-const MAX_PLAYERS = 8
 var boards = {}
 var rooms = {}
 
