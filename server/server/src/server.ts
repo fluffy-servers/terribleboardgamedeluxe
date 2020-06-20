@@ -1,6 +1,6 @@
 import express from 'express'
 import http from 'http'
-import { Board } from '../../shared'
+import { BoardManager } from './BoardManager'
 
 // Setup express to simply serve the public directory
 const app = express()
@@ -12,5 +12,5 @@ const port = process.env.PORT || 3000
 export const server = new http.Server(app)
 server.listen(port, () => {
     console.log('Server started on *:3000')
-    // Board.loadBoardData()
+    BoardManager.loadBoardData()
 })

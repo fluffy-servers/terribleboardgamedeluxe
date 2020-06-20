@@ -25,30 +25,6 @@ export class Board {
     public players: any[] = []
     public tileGrid: number[][] = []
 
-    /*
-    private static boardData: any = {}
-
-    public static loadBoardData() {
-        Board.boardData = {}
-        for (const filename of fs.readdirSync('./boards/')) {
-            fs.readFile('./boards/' + filename, (err, content) => {
-                if (err) {
-                    console.error(err)
-                    return
-                } else {
-                    const name = filename.replace('.json', '')
-                    const board = JSON.parse(content.toString())
-                    Board.boardData[name] = board
-                }
-            })
-        }
-    }
-
-    public static getBoardNames() {
-        return Object.keys(Board.boardData)
-    }
-    */
-
     public static createBoard(array: any[]): Board {
         const b = new Board()
         b.fromArray(array)

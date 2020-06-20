@@ -1,14 +1,15 @@
 import socket from 'socket.io'
 import sanitize from 'sanitize-html'
 import { server } from './server'
-import { Board, Room } from '../../shared'
+import { Room } from '../../shared'
+import { BoardManager } from './BoardManager'
 
 let rooms = {}
 const io = new socket(server)
 
 io.on('connection', (socket: any) => {
     // Send a list of game boards on connection
-    //socket.emit('boards list', Board.getBoardNames())
+    socket.emit('boards list', BoardManager.getBoardNames())
 
     socket.on('join game', (roomcode: string, username: string) => {
         roomcode = roomcode.toUpperCase()
@@ -86,7 +87,7 @@ io.on('connection', (socket: any) => {
             roomcode = Room.randomString(4)
         }
         const room = new Room(roomcode)
-        //room.board = Board.createBoard(boardType)
+        room.board = BoardManager.createBoard(boardType)
 
         // Add the player to the room
         let player = {
