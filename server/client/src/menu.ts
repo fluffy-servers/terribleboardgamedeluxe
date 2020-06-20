@@ -1,5 +1,5 @@
 import { GameController } from './GameController'
-import { RoomState } from '../../shared'
+import { RoomState, Room } from '../../shared'
 
 /**
  * Display the join room screen
@@ -89,9 +89,9 @@ export function lobbyPlayersList(players: any[]) {
 }
 
 /**
- * Bind some menu events to a given socket
+ * Bind menu events to the global socket
  */
-export function bindSocketMenuEvents(): void {
+export function bindSocketEvents(): void {
     const socket = GameController.socket
 
     // Display login errors
@@ -118,18 +118,42 @@ export function bindSocketMenuEvents(): void {
             lobbyPlayersList(players)
         }
     })
+
+    // Update the list of board types
+    socket.on('boards list', (boards: string[]) => {
+        const dropdown = (<HTMLSelectElement>document.getElementById('map-select'))
+        for (let board of boards) {
+            let option = document.createElement('option')
+            option.text = board
+            dropdown.add(option)
+        }
+    })
+
+    // Display the start button if lobby owner
+    socket.on('lobby owner', () => {
+        document.getElementById('startbutton').style.display = 'block'
+    })
+
+    // Close up the menu once the game starts
+    socket.on('start game', () => {
+        document.getElementById('lobby').style.display = 'none'
+        GameController.state = RoomState.Board
+        document.getElementById('background').style.display = 'none'
+    })
 }
 
 /**
- * Unbind menu events from a given socket
- * @param socket SocketIO socket to unbind events
+ * Unbind menu events from the global socket
  */
-export function unbindSocketMenuEvents(): void {
+export function unbindSocketEvents(): void {
     const socket = GameController.socket
 
     socket.off('login error')
     socket.off('joined lobby')
     socket.off('update players')
+    socket.off('boards list')
+    socket.off('lobby owner')
+    socket.off('start game')
 }
 
 /**
