@@ -1,12 +1,37 @@
 import { Board } from './Board'
+import * as socketio from 'socket.io'
 
 export enum RoomState {
     Menu,
-    Lobby
+    Lobby,
+    Board,
+    Game
 }
 
 export class Player {
+    public id: number = -1
+    public username: string
+    public socket?: SocketIO.Socket
 
+    public static verifyUsername(username: string): boolean {
+        if (username.length > 20 || username.length < 1) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    public constructor(username: string) {
+        this.username = username
+    }
+
+    public setID(id: number) {
+        this.id = id
+    }
+}
+
+interface RoomList {
+    [roomcode: string]: Room
 }
 
 export class Room {
@@ -17,6 +42,15 @@ export class Room {
     public ownerID: number = 0
 
     private static MAX_PLAYERS: number = 8
+    private static rooms: RoomList = {}
+
+    public static findRoom(roomcode: string) {
+        if (this.rooms[roomcode]) {
+            return this.rooms[roomcode]
+        } else {
+            return false
+        }
+    }
 
     public static randomString(n: number, base: string = ''): string {
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789'
@@ -29,8 +63,14 @@ export class Room {
         }
     }
 
-    public constructor(roomcode: string) {
+    public constructor() {
+        let roomcode = Room.randomString(4)
+        while (roomcode in Room.rooms) {
+            roomcode = Room.randomString(4)
+        }
+
         this.roomcode = roomcode
+        Room.rooms[roomcode] = this
     }
 
     public addPlayer(player: any): number {
@@ -46,6 +86,14 @@ export class Room {
 
     public removePlayer(id: number): void {
         this.players[id] = undefined
+
+        // Check that we have at least *some* players still in the room
+        // If this room is entirely empty, we can clean it up entirely
+        let count = this.players.filter(val => val != undefined).length
+        if (count == 0) {
+            console.log('Deleting room:', this.roomcode)
+            delete Room.rooms[this.roomcode]
+        }
     }
 
     public encodePlayers(): any[] {
