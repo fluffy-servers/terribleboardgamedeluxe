@@ -139,6 +139,8 @@ export function bindSocketEvents(): void {
         document.getElementById('lobby').style.display = 'none'
         GameController.state = RoomState.Board
         document.getElementById('background').style.display = 'none'
+
+        this.unbindSocketEvents()
     })
 }
 
