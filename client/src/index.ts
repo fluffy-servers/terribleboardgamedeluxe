@@ -1,6 +1,6 @@
-const { app, BrowserWindow } = require('electron')
+import { app, BrowserWindow } from 'electron'
 
-function createWindow() {
+function createWindow(): BrowserWindow {
     let win = new BrowserWindow({
         width: 800,
         height: 600,
@@ -8,7 +8,8 @@ function createWindow() {
 
     win.setTitle('Terrible Board Game Deluxe Edition [Beta!]')
     win.setMenuBarVisibility(false)
-    win.loadURL('http://localhost:3000') // security stonks
+    win.loadURL('https://boardgame.fluffyservers.com') // security stonks
+    return win
 }
 
 app.whenReady().then(createWindow)
