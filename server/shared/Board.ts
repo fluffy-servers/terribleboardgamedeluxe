@@ -32,6 +32,10 @@ export class Board {
         return b
     }
 
+    public static reverseDirection(direction: any[]): any[] {
+        return [-direction[0], -direction[1]]
+    }
+
     public constructor() {
         // ain't nobody here but us potatoes
         // you'll probably want to use fromArray to make a board
@@ -182,5 +186,18 @@ export class Board {
     public getTile(x: number, y: number): Tile {
         const id = this.tileGrid[x][y]
         return this.tileData[id]
+    }
+
+    public attemptMove(id: number, direction: any[]) {
+        const curPos = this.players[id]
+        const newPos = { x: curPos.x + direction[0], y: curPos.y + direction[1] }
+
+        const hasTile = this.checkLink(curPos.x, curPos.y, newPos.x, newPos.y)
+        if (!hasTile) return false
+
+        const newTile = this.getTile(newPos.x, newPos.y)
+        this.players[id].x = newTile.x
+        this.players[id].y = newTile.y
+        return newTile
     }
 }

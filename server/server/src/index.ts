@@ -2,7 +2,7 @@ import * as socketio from 'socket.io'
 import sanitize from 'sanitize-html'
 import { performance } from 'perf_hooks'
 import { server } from './Server'
-import { Room, RoomState } from '../../shared/dist'
+import { Board, Room, RoomState } from '../../shared/dist'
 import { BoardManager } from './BoardManager'
 
 const io = socketio.listen(server)
@@ -145,11 +145,12 @@ io.on('connection', (socket: any) => {
         if (performance.now() - socket.lastMove < 500) return
         const room = socket.gameRoom
 
-        let reverse = room.board.reverseDirection(direction)
+        let reverse = Board.reverseDirection(direction)
         if (socket.lastDirection && socket.lastDirection[0] == reverse[0] && socket.lastDirection[1] == reverse[1]) return
 
         // Update player movement (if valid)
         const newTile = room.board.attemptMove(socket.playerID, direction)
+        console.log(newTile)
         if (newTile) {
             socket.lastMove = performance.now()
             socket.lastDirection = direction
