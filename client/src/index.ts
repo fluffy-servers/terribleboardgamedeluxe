@@ -1,9 +1,14 @@
 import { app, BrowserWindow } from 'electron'
+import * as path from 'path'
 
 function createWindow(): BrowserWindow {
     let win = new BrowserWindow({
         width: 800,
         height: 600,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            enableRemoteModule: false
+        }
     })
 
     win.setTitle('Terrible Board Game Deluxe Edition [Beta!]')
