@@ -1,0 +1,34 @@
+{
+    "application": {
+        "id": 577671608651612162,
+        "manifests": [
+            {
+                "label": "terribleboardgame/windows-test",
+                "platforms": [
+                    "win32",
+                    "win64"
+                ],
+                "locales": [],
+                "local_root": "./terribleboardgame-client-win32-x64",
+                "file_rules": {
+                    "mappings": [
+                        {
+                            "local_path": ".",
+                            "install_path": "."
+                        }
+                    ]
+                },
+                "launch_options": [
+                    {
+                        "name": "TBG Client Testing",
+                        "executable": "terribleboardgame-client.exe",
+                        "platforms": [
+                            "win32",
+                            "win64"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
