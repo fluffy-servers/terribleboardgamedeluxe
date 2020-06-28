@@ -3,9 +3,10 @@
 */package-lock.json
 
 # No compiled TS
-*/dist/
 */*/dist
 server/public/src/
 
 # Client distribution
+client/dist/*
+!client/dist/assets/
 client/terribleboardgame-client-win32-x64
