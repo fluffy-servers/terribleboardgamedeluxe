@@ -54,4 +54,12 @@ GameController.socket.on('animate fox', (foxID: number, x: number, y: number, ti
 
 window.addEventListener('load', () => {
     discord.startDiscord()
+
+    // Check if we have a roomcode in the URL already
+    // If so, jump to the join room screen
+    const url = window.location.href.slice(9).split('/')
+    if (url.length > 1 && url[1].length == 4) {
+        const roomcode = url[1]
+        menu.joinRoomScreenPrefilled(roomcode)
+    }
 })

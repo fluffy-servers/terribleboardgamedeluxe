@@ -10,6 +10,15 @@ export function joinRoomScreen(): void {
     document.getElementById('joinroom').style.display = 'block'
 }
 
+export function joinRoomScreenPrefilled(roomcode: string): void {
+    document.getElementById('mainroom').style.display = 'none'
+    document.getElementById('joinroom').style.display = 'block'
+
+    const roombox = (<HTMLInputElement>document.getElementById('join-roomcode'))
+    roombox.value = roomcode
+    roombox.parentElement.classList.add('is-dirty')
+}
+
 /**
  * Display the create room screen
  */
@@ -25,6 +34,9 @@ export function mainRoomScreen(): void {
     document.getElementById('createroom').style.display = 'none'
     document.getElementById('joinroom').style.display = 'none'
     document.getElementById('mainroom').style.display = 'block'
+
+    // Clear the room code in the URL
+    window.history.replaceState(null, 'Terrible Board Game', '/')
 }
 
 /**
@@ -110,9 +122,13 @@ export function bindSocketEvents(): void {
         GameController.playerID = id
 
         lobbyScreen()
+        // Connect to Discord (if applicable)
         discord.joinLobby(roomcode, 1, 8)
         discord.updateJoinSecret(roomcode, id.toString())
+
+        // Add the roomcode to the page + URL
         document.getElementById('lobby-roomcode').innerHTML = roomcode
+        window.history.replaceState(null, 'Terrible Board Game', '/' + roomcode)
     })
 
     // Update the list of lobby players
