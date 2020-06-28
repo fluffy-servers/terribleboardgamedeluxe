@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import * as menu from './Menu'
 import * as chat from './Chat'
+import * as discord from './discord'
 import { GameController } from './GameController'
 import { Board, RoomState } from '../../shared/dist'
 import BoardRenderer from './board/BoardRenderer';
@@ -10,9 +11,7 @@ menu.bindSocketEvents()
 chat.bindSocketEvents()
 
 GameController.socket.on('create board', (board: Board) => {
-    console.log(board)
     GameController.board = new BoardRenderer(board.tileData)
-    console.log(GameController.board.camera)
 })
 
 // Send movement commands when arrow keys are pressed
@@ -52,4 +51,8 @@ GameController.socket.on('update player positions', function (positions: any[]) 
 
 GameController.socket.on('animate fox', function (foxID, x, y, tileType) {
     GameController.board.foxMovement(foxID, x, y)
+})
+
+window.addEventListener('load', () => {
+    discord.startDiscord()
 })

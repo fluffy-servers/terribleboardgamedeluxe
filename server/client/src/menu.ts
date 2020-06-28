@@ -1,5 +1,6 @@
 import { GameController } from './GameController'
 import { RoomState, Room } from '../../shared'
+import * as discord from './discord'
 
 /**
  * Display the join room screen
@@ -109,6 +110,7 @@ export function bindSocketEvents(): void {
         GameController.playerID = id
 
         lobbyScreen()
+        discord.joinLobby(roomcode, 1, 8)
         document.getElementById('lobby-roomcode').innerHTML = roomcode
     })
 
@@ -117,6 +119,8 @@ export function bindSocketEvents(): void {
         if (GameController.state == RoomState.Lobby) {
             lobbyPlayersList(players)
         }
+
+        discord.updatePlayers(players.length, 8)
     })
 
     // Update the list of board types
@@ -141,6 +145,7 @@ export function bindSocketEvents(): void {
         document.getElementById('background').style.display = 'none'
 
         this.unbindSocketEvents()
+        discord.onBoard()
     })
 }
 
