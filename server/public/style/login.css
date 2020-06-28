@@ -42,7 +42,7 @@
     right: 40px;
 }
 
-#backbutton {
+.backbutton {
     position: absolute;
     bottom: 24px;
     left: 24px;
@@ -57,6 +57,7 @@
 }
 
 #startbutton {
+    display: none;
     position: absolute;
     bottom: 32px;
     right: 40px;
@@ -117,4 +118,9 @@
     width: 50%;
     display: block;
     margin: 16px auto;
+}
+
+#chatclose {
+    position: absolute;
+    right: 4px;
 }
