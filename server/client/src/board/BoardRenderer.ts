@@ -158,12 +158,13 @@ export default class BoardRenderer {
         const position = BoardRenderer.translateTileCoordinate(x, y)
         sprite.position.y = 0.6
         sprite.position.x = position[0]
-        sprite.position.y = position[1]
+        sprite.position.z = position[1]
 
         // Update camera
         if (id == GameController.playerID) {
             const zoom = BoardRenderer.zoom
             this.camera.position.set(zoom + sprite.position.x, zoom, zoom + sprite.position.z)
+            console.log(this, this.camera.position)
         }
     }
 

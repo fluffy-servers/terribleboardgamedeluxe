@@ -16,6 +16,13 @@ export function joinLobby(roomcode: string, players: number, maxsize: number) {
     }
 }
 
+export function updateJoinSecret(roomcode: string, salt: string) {
+    const bridge = (window as any).bridge
+    if (bridge) {
+        bridge.updateJoinSecret(roomcode, salt)
+    }
+}
+
 export function updatePlayers(players: number, maxsize: number) {
     const bridge = (window as any).bridge
     if (bridge) {

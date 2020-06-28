@@ -42,14 +42,13 @@ window.addEventListener('keydown', e => {
     GameController.socket.emit('board movement', direction)
 })
 
-GameController.socket.on('update player positions', function (positions: any[]) {
-    for (var id in positions) {
-        const position = positions[id]
-        GameController.board.makeFox(position.x, position.y, 0)
-    }
+GameController.socket.on('update player positions', (positions: any[]) => {
+    positions.forEach((value, index) => {
+        GameController.board.makeFox(value.x, value.y, index)
+    })
 })
 
-GameController.socket.on('animate fox', function (foxID, x, y, tileType) {
+GameController.socket.on('animate fox', (foxID: number, x: number, y: number, tileType: string) => {
     GameController.board.foxMovement(foxID, x, y)
 })
 

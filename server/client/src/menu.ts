@@ -111,6 +111,7 @@ export function bindSocketEvents(): void {
 
         lobbyScreen()
         discord.joinLobby(roomcode, 1, 8)
+        discord.updateJoinSecret(roomcode, id.toString())
         document.getElementById('lobby-roomcode').innerHTML = roomcode
     })
 
@@ -120,7 +121,8 @@ export function bindSocketEvents(): void {
             lobbyPlayersList(players)
         }
 
-        discord.updatePlayers(players.length, 8)
+        const current = players.filter(Boolean).length
+        discord.updatePlayers(current, 8)
     })
 
     // Update the list of board types

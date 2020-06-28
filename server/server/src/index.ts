@@ -104,7 +104,7 @@ io.on('connection', (socket: any) => {
         io.to(room.roomcode).emit('update players', room.encodePlayers())
     })
 
-    socket.on('start game', function () {
+    socket.on('start game', () => {
         if (!socket.gameRoom) return
         let room = socket.gameRoom
 
