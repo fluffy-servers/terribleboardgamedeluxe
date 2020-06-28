@@ -29,6 +29,15 @@ bridge.joinLobby = function (roomcode: string, players: number, maxsize: number)
     discord.updateActivity(status)
 }
 
+bridge.updateJoinSecret = function (roomcode: string, salt: string) {
+    // stonks - first 4 digits are what we need, salt makes it unique
+    const secret = roomcode + salt
+    status.secrets = {
+        join: secret
+    }
+    discord.updateActivity(status)
+}
+
 bridge.updatePlayers = function (players: number, maxsize: number) {
     if (!status.party) return
 

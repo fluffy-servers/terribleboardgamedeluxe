@@ -7,6 +7,6 @@
 server/public/src/
 
 # Client distribution
-client/dist/*
-!client/dist/assets/
+client/*.js
+client/*.js.map
 client/terribleboardgame-client-win32-x64
