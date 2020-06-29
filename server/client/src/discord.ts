@@ -9,6 +9,14 @@ export function startDiscord() {
     }
 }
 
+export function onJoin(callback: Function) {
+    const bridge = (window as any).bridge
+    if (bridge) {
+        bridge.onJoin(callback)
+        console.log('Bridge - on join successful')
+    }
+}
+
 export function joinLobby(roomcode: string, players: number, maxsize: number) {
     const bridge = (window as any).bridge
     if (bridge) {

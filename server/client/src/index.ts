@@ -62,4 +62,16 @@ window.addEventListener('load', () => {
         const roomcode = url[1]
         menu.joinRoomScreenPrefilled(roomcode)
     }
+
+    // Add a join handler for Discord integration
+    console.log('Adding join handler!')
+    discord.onJoin(secret => {
+        console.log('HOPEFULLY JOINING A GAME')
+        console.log(secret)
+        setTimeout(() => {
+            const roomcode = secret.slice(4)
+            console.log(roomcode)
+            menu.joinRoomScreenPrefilled(roomcode)
+        }, 2000)
+    })
 })

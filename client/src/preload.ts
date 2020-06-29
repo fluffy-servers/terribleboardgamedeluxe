@@ -18,6 +18,10 @@ bridge.start = function () {
     return setInterval(discord.runCallbacks, 1000 / 60)
 }
 
+bridge.onJoin = function (callback: Function) {
+    discord.onActivityJoin(callback)
+}
+
 bridge.joinLobby = function (roomcode: string, players: number, maxsize: number) {
     status.party = {
         id: roomcode,
