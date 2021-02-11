@@ -104,13 +104,13 @@ io.on('connection', (socket: any) => {
         io.to(room.roomcode).emit('update players', room.encodePlayers())
     })
 
-    socket.on('start game', function () {
+    socket.on('start game', () => {
         if (!socket.gameRoom) return
-        let room = socket.gameRoom
+        let room = socket.gameRoom as Room
 
         if (room.ownerID == socket.playerID) {
             // Start the game
-            room.gamestate = 'board'
+            room.gamestate = RoomState.Board
             io.to(room.roomcode).emit('start game')
 
             // Place the foxes on the board
@@ -129,7 +129,7 @@ io.on('connection', (socket: any) => {
 
     socket.on('chat message', (text: string) => {
         if (!socket.gameRoom) return
-        const room = socket.gameRoom
+        const room = socket.gameRoom as Room
         const username = room.players[socket.playerID].username
         text = sanitize(text).trim()
 
@@ -143,24 +143,23 @@ io.on('connection', (socket: any) => {
 
     socket.on('board movement', (direction) => {
         if (performance.now() - socket.lastMove < 500) return
-        const room = socket.gameRoom
+        const room = socket.gameRoom as Room
 
         let reverse = Board.reverseDirection(direction)
         if (socket.lastDirection && socket.lastDirection[0] == reverse[0] && socket.lastDirection[1] == reverse[1]) return
 
         // Update player movement (if valid)
         const newTile = room.board.attemptMove(socket.playerID, direction)
-        console.log(newTile)
         if (newTile) {
             socket.lastMove = performance.now()
             socket.lastDirection = direction
-            io.to(room.roomcode).emit('animate fox', socket.playerID, newTile.x, newTile.y, newTile.type)
+            io.to(room.roomcode).emit('animate fox', socket.playerID, newTile.x, newTile.y, newTile.tileType)
         }
     })
 
     socket.on('disconnect', () => {
         if (socket.gameRoom) {
-            const room = socket.gameRoom
+            const room = socket.gameRoom as Room
             room.removePlayer(socket.playerID)
             io.to(room.roomcode).emit('update players', room.encodePlayers())
         }

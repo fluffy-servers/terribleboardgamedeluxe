@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import * as menu from './Menu'
 import * as chat from './Chat'
+import * as discord from './discord'
 import { GameController } from './GameController'
 import { Board, RoomState } from '../../shared/dist'
 import BoardRenderer from './board/BoardRenderer';
@@ -10,9 +11,7 @@ menu.bindSocketEvents()
 chat.bindSocketEvents()
 
 GameController.socket.on('create board', (board: Board) => {
-    console.log(board)
     GameController.board = new BoardRenderer(board.tileData)
-    console.log(GameController.board.camera)
 })
 
 // Send movement commands when arrow keys are pressed
@@ -43,13 +42,36 @@ window.addEventListener('keydown', e => {
     GameController.socket.emit('board movement', direction)
 })
 
-GameController.socket.on('update player positions', function (positions: any[]) {
-    for (var id in positions) {
-        const position = positions[id]
-        GameController.board.makeFox(position.x, position.y, 0)
-    }
+GameController.socket.on('update player positions', (positions: any[]) => {
+    positions.forEach((value, index) => {
+        GameController.board.makeFox(value.x, value.y, index)
+    })
 })
 
-GameController.socket.on('animate fox', function (foxID, x, y, tileType) {
+GameController.socket.on('animate fox', (foxID: number, x: number, y: number, tileType: string) => {
     GameController.board.foxMovement(foxID, x, y)
+})
+
+window.addEventListener('load', () => {
+    discord.startDiscord()
+
+    // Check if we have a roomcode in the URL already
+    // If so, jump to the join room screen
+    const url = window.location.href.slice(9).split('/')
+    if (url.length > 1 && url[1].length == 4) {
+        const roomcode = url[1]
+        menu.joinRoomScreenPrefilled(roomcode)
+    }
+
+    // Add a join handler for Discord integration
+    console.log('Adding join handler!')
+    discord.onJoin(secret => {
+        console.log('HOPEFULLY JOINING A GAME')
+        console.log(secret)
+        setTimeout(() => {
+            const roomcode = secret.slice(4)
+            console.log(roomcode)
+            menu.joinRoomScreenPrefilled(roomcode)
+        }, 2000)
+    })
 })

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Terrible Board Game Deluxe Edition</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .corner {
+            position: absolute;
+            right: -30vh;
+            top: 12.5vh;
+            transform: rotate(15deg)
+        }
+
+        .corner img {
+            height: 75vh;
+        }
+
+        #spinner {
+            background-color: #0abde3;
+            border-radius: 100%;
+        }
+
+        h1,
+        h2 {
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 4em;
+        }
+
+        h2 {
+            font-size: 1.75em;
+        }
+
+        li {
+            font-size: 1.25em;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .content {
+            position: absolute;
+            left: 12.5vw;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div class='corner'>
+        <img id='spinner' src='img/fox_hr0.png'>
+    </div>
+
+    <div class='content'>
+        <h1>Uh oh!</h1>
+        <h2>Something has gone wrong!</h2>
+        <ul>
+            <li>The central server could be offline</li>
+            <li>Your device could be disconnected</li>
+            <li>The foxes may have taken over the world</li>
+        </ul>
+    </div>
+</body>
+
+</html>

@@ -48,7 +48,7 @@ export class Board {
     }
 
     public addEdge(id1: number, id2: number): void {
-        if (!id2) return
+        if (id2 == undefined) return
         this.adjList[id1].push(id2)
     }
 
@@ -176,6 +176,11 @@ export class Board {
         }
 
         return false
+    }
+
+    public getLinks(x: number, y: number) {
+        const curTile = this.tileGrid[x][y]
+        return this.adjList[curTile]
     }
 
     /**

@@ -2,8 +2,9 @@
   "compilerOptions": {
     "module": "commonjs",
     "noImplicitAny": true,
-    "sourceMap": true,
-    "outDir": "dist",
+    // "sourceMap": true,
+    // "rootDir": "./",
+    // "outDir": ".",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]

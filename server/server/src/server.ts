@@ -1,10 +1,15 @@
 import express from 'express'
 import http from 'http'
+import path from 'path'
 import { BoardManager } from './BoardManager'
 
 // Setup express to simply serve the public directory
 const app = express()
 app.use(express.static('public'))
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve('public/index.html'))
+})
 
 // Setup an HTTP server on the given port
 // We'll link up all our IO stuff to this server

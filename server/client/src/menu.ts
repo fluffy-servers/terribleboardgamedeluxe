@@ -1,5 +1,6 @@
 import { GameController } from './GameController'
 import { RoomState, Room } from '../../shared'
+import * as discord from './discord'
 
 /**
  * Display the join room screen
@@ -7,6 +8,15 @@ import { RoomState, Room } from '../../shared'
 export function joinRoomScreen(): void {
     document.getElementById('mainroom').style.display = 'none'
     document.getElementById('joinroom').style.display = 'block'
+}
+
+export function joinRoomScreenPrefilled(roomcode: string): void {
+    document.getElementById('mainroom').style.display = 'none'
+    document.getElementById('joinroom').style.display = 'block'
+
+    const roombox = (<HTMLInputElement>document.getElementById('join-roomcode'))
+    roombox.value = roomcode
+    roombox.parentElement.classList.add('is-dirty')
 }
 
 /**
@@ -24,6 +34,9 @@ export function mainRoomScreen(): void {
     document.getElementById('createroom').style.display = 'none'
     document.getElementById('joinroom').style.display = 'none'
     document.getElementById('mainroom').style.display = 'block'
+
+    // Clear the room code in the URL
+    window.history.replaceState(null, 'Terrible Board Game', '/')
 }
 
 /**
@@ -109,7 +122,13 @@ export function bindSocketEvents(): void {
         GameController.playerID = id
 
         lobbyScreen()
+        // Connect to Discord (if applicable)
+        discord.joinLobby(roomcode, 1, 8)
+        discord.updateJoinSecret(roomcode, id.toString())
+
+        // Add the roomcode to the page + URL
         document.getElementById('lobby-roomcode').innerHTML = roomcode
+        window.history.replaceState(null, 'Terrible Board Game', '/' + roomcode)
     })
 
     // Update the list of lobby players
@@ -117,6 +136,9 @@ export function bindSocketEvents(): void {
         if (GameController.state == RoomState.Lobby) {
             lobbyPlayersList(players)
         }
+
+        const current = players.filter(Boolean).length
+        discord.updatePlayers(current, 8)
     })
 
     // Update the list of board types
@@ -141,6 +163,7 @@ export function bindSocketEvents(): void {
         document.getElementById('background').style.display = 'none'
 
         this.unbindSocketEvents()
+        discord.onBoard()
     })
 }
 

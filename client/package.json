@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Electron client for Terrible Board Game",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && mv src/index.js index.js & mv src/preload.js preload.js",
     "watch": "tsc -w",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "npm run build && electron index.js",
+    "package": "npm run build && electron-packager . --overwrite --ignore=src/*",
+    "discord-push": "dispatch build push 605050342404784148 config.json ."
   },
   "author": "Robert A Fraser",
   "devDependencies": {
@@ -13,5 +15,8 @@
     "typescript": "^3.9.5",
     "electron-packager": "^14.2.1"
   },
-  "main": "dist/index.js"
+  "main": "index.js",
+  "dependencies": {
+    "discord-gamesdk-js": "file:../../discord-gamesdk-js"
+  }
 }
